@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
@@ -11,126 +12,148 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '5879';
 app.use(express.json({ limit: '5mb' }));
 app.use(express.static('public'));
 
+// ============ DB ============
 function loadDB() {
   if (!fs.existsSync(DB_FILE)) {
-    fs.writeFileSync(DB_FILE, JSON.stringify({ blogs: [], bannedLinks: [] }, null, 2));
-    return { blogs: [], bannedLinks: [] };
+    fs.writeFileSync(DB_FILE, JSON.stringify({ users: [], sessions: {}, bannedLinks: [] }, null, 2));
+    return { users: [], sessions: {}, bannedLinks: [] };
   }
   try {
     const db = JSON.parse(fs.readFileSync(DB_FILE, 'utf8'));
     if (!db.bannedLinks) db.bannedLinks = [];
+    if (!db.sessions) db.sessions = {};
     return db;
-  } catch (e) { return { blogs: [], bannedLinks: [] }; }
+  } catch (e) { return { users: [], sessions: {}, bannedLinks: [] }; }
 }
 
-function saveDB(db) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2));
+function saveDB(db) { fs.writeFileSync(DB_FILE, JSON.stringify(db, null, 2)); }
+function genToken() { return crypto.randomBytes(16).toString('hex'); }
+
+function normalizeUrl(url) {
+  try {
+    const u = new URL(url);
+    return (u.hostname + u.pathname).toLowerCase().replace(/\/+$/, '');
+  } catch (e) { return String(url).toLowerCase().trim(); }
 }
 
-function genKey() {
-  return crypto.randomBytes(8).toString('hex');
+function getUser(req) {
+  const token = req.headers['x-token'] || req.query.token;
+  if (!token) return null;
+  const db = loadDB();
+  const username = db.sessions[token];
+  if (!username) return null;
+  return db.users.find(u => u.username === username) || null;
 }
 
 function checkAdmin(req, res, next) {
   const password = req.headers['x-admin-password'] || req.query.password;
   if (password === ADMIN_PASSWORD) return next();
-  res.status(401).json({ error: 'رمز اشتباه است' });
+  res.status(401).json({ error: 'رمز اشتباه' });
 }
 
-// نرمال‌سازی URL برای مقایسه
-function normalizeUrl(url) {
-  try {
-    const u = new URL(url);
-    return (u.hostname + u.pathname).toLowerCase().replace(/\/+$/, '');
-  } catch (e) {
-    return String(url).toLowerCase().trim();
-  }
-}
-
-// ============ ساخت وبلاگ ============
-app.post('/api/create', (req, res) => {
-  const { username, name, title, bio, about, avatarStyle } = req.body || {};
-
-  if (!username) return res.status(400).json({ error: 'نام کاربری لازمه' });
+// ============ ثبت‌نام ============
+app.post('/api/signup', async (req, res) => {
+  const { username, password, name } = req.body || {};
+  if (!username || !password) return res.status(400).json({ error: 'نام کاربری و رمز لازمه' });
   if (!/^[a-z0-9_]{3,20}$/.test(username)) {
-    return res.status(400).json({ error: 'نام کاربری: ۳-۲۰ کاراکتر، حروف کوچک، عدد، _' });
+    return res.status(400).json({ error: 'نام کاربری: ۳-۲۰ کاراکتر، حروف کوچک انگلیسی، عدد و _' });
   }
+  if (password.length < 4) return res.status(400).json({ error: 'رمز حداقل ۴ کاراکتر' });
 
   const db = loadDB();
-  if (db.blogs.find(b => b.username === username)) {
-    return res.status(400).json({ error: 'این نام کاربری قبلاً گرفته شده' });
+  if (db.users.find(u => u.username === username)) {
+    return res.status(400).json({ error: 'این نام کاربری گرفته شده' });
   }
 
-  const editKey = genKey();
-  const blog = {
+  const hashed = await bcrypt.hash(password, 10);
+  const user = {
     username,
-    editKey,
+    password: hashed,
     name: (name || username).trim().slice(0, 50),
-    title: (title || '').trim().slice(0, 100),
-    bio: (bio || '').trim().slice(0, 300),
-    about: (about || '').trim().slice(0, 5000),
-    avatarStyle: (avatarStyle || 'gradient1').slice(0, 20),
+    title: '',
+    bio: '',
+    about: '',
+    avatarStyle: 'gradient1',
     links: [],
     views: 0,
+    banned: false,
     createdAt: new Date().toISOString()
   };
 
-  db.blogs.push(blog);
+  db.users.push(user);
+  const token = genToken();
+  db.sessions[token] = username;
   saveDB(db);
 
-  res.json({ message: 'ساخته شد', username, editKey });
+  res.json({ message: 'ثبت‌نام موفق', token, username });
 });
 
-// ============ دریافت وبلاگ ============
-app.get('/api/blog/:username', (req, res) => {
+// ============ ورود ============
+app.post('/api/login', async (req, res) => {
+  const { username, password } = req.body || {};
+  if (!username || !password) return res.status(400).json({ error: 'نام کاربری و رمز لازمه' });
+
   const db = loadDB();
-  const blog = db.blogs.find(b => b.username === req.params.username);
-  if (!blog) return res.status(404).json({ error: 'پیدا نشد' });
+  const user = db.users.find(u => u.username === username);
+  if (!user) return res.status(401).json({ error: 'کاربر پیدا نشد' });
 
-  const key = req.query.key;
-  const isOwner = key && key === blog.editKey;
+  const ok = await bcrypt.compare(password, user.password);
+  if (!ok) return res.status(401).json({ error: 'رمز اشتباهه' });
 
-  if (isOwner) return res.json(blog);
+  if (user.banned) {
+    return res.status(403).json({ error: '⛔ حساب شما مسدود شده است' });
+  }
 
-  // عمومی - لینک‌های بن‌شده فیلتر می‌شن
-  const { editKey, ...safe } = blog;
-  safe.links = safe.links.filter(l => !db.bannedLinks.includes(normalizeUrl(l.url)));
+  const token = genToken();
+  db.sessions[token] = username;
+  saveDB(db);
+
+  res.json({ message: 'ورود موفق', token, username });
+});
+
+// ============ پروفایل خودم ============
+app.get('/api/me', (req, res) => {
+  const user = getUser(req);
+  if (!user) return res.status(401).json({ error: 'وارد نشدی' });
+  const { password, ...safe } = user;
   res.json(safe);
 });
 
-// ============ ویرایش ============
-app.post('/api/blog/:username/update', (req, res) => {
-  const { key, name, title, bio, about, avatarStyle } = req.body || {};
-  const db = loadDB();
-  const blog = db.blogs.find(b => b.username === req.params.username);
-  if (!blog) return res.status(404).json({ error: 'پیدا نشد' });
-  if (key !== blog.editKey) return res.status(401).json({ error: 'کلید اشتباه' });
+app.post('/api/me', (req, res) => {
+  const me = getUser(req);
+  if (!me) return res.status(401).json({ error: 'وارد نشدی' });
+  if (me.banned) return res.status(403).json({ error: '⛔ حساب مسدود' });
 
-  if (name !== undefined) blog.name = String(name).trim().slice(0, 50);
-  if (title !== undefined) blog.title = String(title).trim().slice(0, 100);
-  if (bio !== undefined) blog.bio = String(bio).trim().slice(0, 300);
-  if (about !== undefined) blog.about = String(about).trim().slice(0, 5000);
-  if (avatarStyle !== undefined) blog.avatarStyle = String(avatarStyle).slice(0, 20);
+  const { name, title, bio, about, avatarStyle } = req.body || {};
+  const db = loadDB();
+  const user = db.users.find(u => u.username === me.username);
+
+  if (name !== undefined) user.name = String(name).trim().slice(0, 50);
+  if (title !== undefined) user.title = String(title).trim().slice(0, 100);
+  if (bio !== undefined) user.bio = String(bio).trim().slice(0, 300);
+  if (about !== undefined) user.about = String(about).trim().slice(0, 5000);
+  if (avatarStyle !== undefined) user.avatarStyle = String(avatarStyle).slice(0, 20);
 
   saveDB(db);
   res.json({ message: 'ذخیره شد' });
 });
 
 // ============ لینک‌ها ============
-app.post('/api/blog/:username/links', (req, res) => {
-  const { key, title, url, icon, description } = req.body || {};
-  const db = loadDB();
-  const blog = db.blogs.find(b => b.username === req.params.username);
-  if (!blog) return res.status(404).json({ error: 'پیدا نشد' });
-  if (key !== blog.editKey) return res.status(401).json({ error: 'کلید اشتباه' });
+app.post('/api/me/links', (req, res) => {
+  const me = getUser(req);
+  if (!me) return res.status(401).json({ error: 'وارد نشدی' });
+  if (me.banned) return res.status(403).json({ error: '⛔ حساب مسدود' });
+
+  const { title, url, icon, description } = req.body || {};
   if (!title || !url) return res.status(400).json({ error: 'عنوان و لینک لازمه' });
 
-  // چک بن
+  const db = loadDB();
   if (db.bannedLinks.includes(normalizeUrl(url))) {
-    return res.status(403).json({ error: '⛔ این لینک مسدود شده است' });
+    return res.status(403).json({ error: '⛔ این لینک مسدوده' });
   }
 
-  blog.links.push({
+  const user = db.users.find(u => u.username === me.username);
+  user.links.push({
     id: Date.now().toString(),
     title: String(title).trim().slice(0, 60),
     url: String(url).trim(),
@@ -138,77 +161,150 @@ app.post('/api/blog/:username/links', (req, res) => {
     description: String(description || '').trim().slice(0, 100),
     clicks: 0
   });
-
   saveDB(db);
   res.json({ message: 'اضافه شد' });
 });
 
-app.delete('/api/blog/:username/links/:id', (req, res) => {
-  const key = req.query.key;
-  const db = loadDB();
-  const blog = db.blogs.find(b => b.username === req.params.username);
-  if (!blog) return res.status(404).json({ error: 'پیدا نشد' });
-  if (key !== blog.editKey) return res.status(401).json({ error: 'کلید اشتباه' });
+app.delete('/api/me/links/:id', (req, res) => {
+  const me = getUser(req);
+  if (!me) return res.status(401).json({ error: 'وارد نشدی' });
 
-  blog.links = blog.links.filter(l => l.id !== req.params.id);
+  const db = loadDB();
+  const user = db.users.find(u => u.username === me.username);
+  user.links = user.links.filter(l => l.id !== req.params.id);
   saveDB(db);
   res.json({ message: 'حذف شد' });
 });
 
-// ============ بازدید ============
-app.post('/api/blog/:username/view', (req, res) => {
+// ============ پروفایل عمومی ============
+app.get('/api/user/:username', (req, res) => {
   const db = loadDB();
-  const blog = db.blogs.find(b => b.username === req.params.username);
-  if (!blog) return res.status(404).json({ error: 'پیدا نشد' });
-  blog.views = (blog.views || 0) + 1;
+  const user = db.users.find(u => u.username === req.params.username);
+  if (!user) return res.status(404).json({ error: 'کاربر پیدا نشد' });
+  if (user.banned) return res.status(403).json({ error: '⛔ این وبلاگ مسدود شده است' });
+
+  user.views = (user.views || 0) + 1;
   saveDB(db);
-  res.json({ views: blog.views });
+
+  const { password, ...safe } = user;
+  // فیلتر لینک‌های بن‌شده
+  safe.links = safe.links.filter(l => !db.bannedLinks.includes(normalizeUrl(l.url)));
+  res.json(safe);
 });
 
-// ============ لیست وبلاگ‌ها ============
-app.get('/api/blogs', (req, res) => {
+app.post('/api/user/:username/link/:id/click', (req, res) => {
   const db = loadDB();
-  const list = db.blogs.map(b => ({
-    username: b.username,
-    name: b.name,
-    title: b.title,
-    bio: b.bio,
-    avatarStyle: b.avatarStyle,
-    linksCount: b.links.filter(l => !db.bannedLinks.includes(normalizeUrl(l.url))).length,
-    views: b.views || 0,
-    createdAt: b.createdAt
-  })).sort((a, b) => b.views - a.views).slice(0, 50);
+  const user = db.users.find(u => u.username === req.params.username);
+  if (!user) return res.status(404).json({ error: 'یافت نشد' });
+  const link = user.links.find(l => l.id === req.params.id);
+  if (!link) return res.status(404).json({ error: 'لینک پیدا نشد' });
+  link.clicks = (link.clicks || 0) + 1;
+  saveDB(db);
+  res.json({ clicks: link.clicks });
+});
+
+// ============ لیست کاربرا ============
+app.get('/api/users', (req, res) => {
+  const db = loadDB();
+  const list = db.users
+    .filter(u => !u.banned)
+    .map(u => ({
+      username: u.username,
+      name: u.name,
+      title: u.title,
+      bio: u.bio,
+      avatarStyle: u.avatarStyle,
+      linksCount: u.links.filter(l => !db.bannedLinks.includes(normalizeUrl(l.url))).length,
+      views: u.views || 0
+    }))
+    .sort((a, b) => b.views - a.views)
+    .slice(0, 50);
   res.json(list);
+});
+
+// ============ خروج ============
+app.post('/api/logout', (req, res) => {
+  const token = req.headers['x-token'];
+  if (token) {
+    const db = loadDB();
+    delete db.sessions[token];
+    saveDB(db);
+  }
+  res.json({ message: 'خارج شدی' });
 });
 
 // ============ ADMIN ============
 
-// لیست همه لینک‌ها (برای بن کردن)
-app.get('/api/admin/all-links', checkAdmin, (req, res) => {
+// لیست همه کاربرا (برای ادمین)
+app.get('/api/admin/users', checkAdmin, (req, res) => {
   const db = loadDB();
-  const allLinks = [];
-  db.blogs.forEach(blog => {
-    blog.links.forEach(link => {
-      allLinks.push({
-        blogUsername: blog.username,
-        blogName: blog.name,
-        linkId: link.id,
-        title: link.title,
-        url: link.url,
-        banned: db.bannedLinks.includes(normalizeUrl(link.url))
+  const list = db.users.map(u => ({
+    username: u.username,
+    name: u.name,
+    title: u.title,
+    bio: u.bio,
+    avatarStyle: u.avatarStyle,
+    linksCount: u.links.length,
+    views: u.views || 0,
+    banned: u.banned,
+    createdAt: u.createdAt
+  })).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(list);
+});
+
+// بن کاربر
+app.post('/api/admin/ban-user', checkAdmin, (req, res) => {
+  const { username } = req.body || {};
+  const db = loadDB();
+  const user = db.users.find(u => u.username === username);
+  if (!user) return res.status(404).json({ error: 'پیدا نشد' });
+  user.banned = true;
+  saveDB(db);
+  res.json({ message: 'کاربر بن شد' });
+});
+
+app.post('/api/admin/unban-user', checkAdmin, (req, res) => {
+  const { username } = req.body || {};
+  const db = loadDB();
+  const user = db.users.find(u => u.username === username);
+  if (!user) return res.status(404).json({ error: 'پیدا نشد' });
+  user.banned = false;
+  saveDB(db);
+  res.json({ message: 'کاربر آنبن شد' });
+});
+
+// حذف کاربر
+app.post('/api/admin/delete-user', checkAdmin, (req, res) => {
+  const { username } = req.body || {};
+  const db = loadDB();
+  db.users = db.users.filter(u => u.username !== username);
+  saveDB(db);
+  res.json({ message: 'کاربر حذف شد' });
+});
+
+// لیست همه لینک‌ها
+app.get('/api/admin/links', checkAdmin, (req, res) => {
+  const db = loadDB();
+  const all = [];
+  db.users.forEach(u => {
+    u.links.forEach(l => {
+      all.push({
+        username: u.username,
+        userName: u.name,
+        linkId: l.id,
+        title: l.title,
+        url: l.url,
+        icon: l.icon,
+        clicks: l.clicks || 0,
+        banned: db.bannedLinks.includes(normalizeUrl(l.url)),
+        userBanned: u.banned
       });
     });
   });
-  res.json(allLinks);
+  res.json(all);
 });
 
-// لیست لینک‌های بن‌شده
-app.get('/api/admin/banned-links', checkAdmin, (req, res) => {
-  const db = loadDB();
-  res.json(db.bannedLinks);
-});
-
-// بن کردن لینک
+// بن لینک
 app.post('/api/admin/ban-link', checkAdmin, (req, res) => {
   const { url } = req.body || {};
   if (!url) return res.status(400).json({ error: 'لینک لازمه' });
@@ -221,7 +317,6 @@ app.post('/api/admin/ban-link', checkAdmin, (req, res) => {
   res.json({ message: 'لینک بن شد', url: normalized });
 });
 
-// آنبن کردن لینک
 app.post('/api/admin/unban-link', checkAdmin, (req, res) => {
   const { url } = req.body || {};
   if (!url) return res.status(400).json({ error: 'لینک لازمه' });
@@ -229,25 +324,28 @@ app.post('/api/admin/unban-link', checkAdmin, (req, res) => {
   const db = loadDB();
   db.bannedLinks = db.bannedLinks.filter(u => u !== normalized);
   saveDB(db);
-  res.json({ message: 'لینک آنبن شد', url: normalized });
+  res.json({ message: 'لینک آنبن شد' });
 });
 
-// لیست وبلاگ‌ها (برای ادمین)
-app.get('/api/admin/blogs', checkAdmin, (req, res) => {
+app.get('/api/admin/banned-links', checkAdmin, (req, res) => {
   const db = loadDB();
-  const list = db.blogs.map(b => ({
-    username: b.username,
-    name: b.name,
-    linksCount: b.links.length,
-    views: b.views || 0,
-    createdAt: b.createdAt
-  })).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-  res.json(list);
+  res.json(db.bannedLinks);
 });
 
-// ============ مسیرها ============
+// حذف یک لینک خاص
+app.post('/api/admin/delete-link', checkAdmin, (req, res) => {
+  const { username, linkId } = req.body || {};
+  const db = loadDB();
+  const user = db.users.find(u => u.username === username);
+  if (!user) return res.status(404).json({ error: 'کاربر پیدا نشد' });
+  user.links = user.links.filter(l => l.id !== linkId);
+  saveDB(db);
+  res.json({ message: 'لینک حذف شد' });
+});
+
+// ============ مسیر /u/:username ============
 app.get('/u/:username', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'user.html'));
 });
 
-app.listen(PORT, () => console.log(`✍️ بیوکده روی پورت ${PORT}`));
+app.listen(PORT, () => console.log(`✍️ بیوکده ۲.۰ روی پورت ${PORT}`));
