@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔐 پنل ادمین — بیوکده</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #05070d; --card: #0d1420; --border: #1a2942;
+    --text: #e8eef7; --muted: #7a8ba3;
+    --blue: #3b82f6; --blue-soft: #60a5fa; --cyan: #06b6d4;
+    --danger: #ef4444; --success: #22c55e;
+  }
+  body {
+    font-family: -apple-system, 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; padding: 20px 16px 60px;
+    line-height: 1.6;
+  }
+  #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .container { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+
+  #lockScreen {
+    position: fixed; inset: 0; z-index: 500;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px; background: var(--bg);
+  }
+  #lockScreen.hidden { display: none; }
+  .lock-box {
+    background: rgba(13,20,32,0.9);
+    border: 1px solid var(--border);
+    border-radius: 18px; padding: 40px 30px;
+    max-width: 400px; width: 100%; text-align: center;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 60px rgba(59,130,246,0.08);
+    animation: slideUp 0.5s ease;
+    position: relative; overflow: hidden;
+  }
+  .lock-box::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--blue), transparent);
+    opacity: 0.6;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .lock-box .lock-icon {
+    font-size: 64px; display: block; margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 25px rgba(59,130,246,0.5));
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-8px) rotate(3deg); }
+  }
+  .lock-box h2 {
+    font-size: 22px; font-weight: 800; letter-spacing: 2px; margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .lock-box p { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+  .lock-box input {
+    width: 100%; padding: 14px 16px; border-radius: 10px;
+    border: 1px solid var(--border); background: rgba(5,7,13,0.8);
+    color: var(--text); font-size: 15px; font-family: inherit;
+    text-align: center; letter-spacing: 4px;
+    transition: all 0.25s;
+  }
+  .lock-box input:focus {
+    outline: none; border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+  }
+  .lock-box input.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 4px rgba(239,68,68,0.15);
+    animation: shake 0.4s;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+  }
+  .lock-box button {
+    background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+    color: #fff; border: none; padding: 14px 22px;
+    border-radius: 10px; cursor: pointer; font-size: 15px;
+    font-weight: 800; font-family: inherit; width: 100%;
+    margin-top: 16px; transition: all 0.25s;
+  }
+  .lock-box button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10
