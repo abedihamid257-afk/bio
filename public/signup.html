@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✨ ثبت‌نام — بیوکده</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #05070d; --card: #0d1420; --border: #1a2942;
+    --text: #e8eef7; --muted: #7a8ba3;
+    --blue: #3b82f6; --blue-soft: #60a5fa; --cyan: #06b6d4;
+    --danger: #ef4444;
+  }
+  body {
+    font-family: -apple-system, 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; padding: 20px;
+    display: flex; align-items: center; justify-content: center;
+    overflow-x: hidden;
+  }
+  #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .box {
+    background: rgba(13,20,32,0.9);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px 30px;
+    max-width: 440px; width: 100%;
+    position: relative; z-index: 1;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 80px rgba(59,130,246,0.08);
+    animation: slideUp 0.5s ease;
+  }
+  .box::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--blue), transparent);
+    opacity: 0.7;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px) scale(0.96); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .logo {
+    font-size: 60px; text-align: center; display: block;
+    margin-bottom: 12px;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 25px rgba(59,130,246,0.5));
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-6px) rotate(2deg); }
+  }
+  h1 {
+    text-align: center; font-size: 24px; font-weight: 900;
+    letter-spacing: 2px; margin-bottom: 6px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 24px; }
+  .field { margin-bottom: 14px; }
+  label {
+    display: block; margin-bottom: 6px;
+    font-size: 11px; color: var(--blue-soft);
+    letter-spacing: 1px; text-transform: uppercase;
+    font-weight: 700;
+  }
+  input {
+    width: 100%; padding: 13px 15px; border-radius: 10px;
+    border: 1px solid var(--border); background: rgba(5,7,13,0.8);
+    color: var(--text); font-size: 14px; font-family: inherit;
+    transition: all 0.25s;
+  }
+  input:focus {
+    outline: none; border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+  }
+  .hint { font-size: 10px; color: var(--muted); margin-top: 4px; }
+  button {
+    width: 100%; padding: 14px; border-radius: 10px;
+    border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+    color: #fff; font-size: 15px; font-weight: 800;
+    font-family: inherit; margin-top: 16px;
+    transition: all 0.25s;
+    box-shadow: 0 8px 25px rgba(59,130,246,0.4);
+  }
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(59,130,246,0.6);
+  }
+  button:disabled { opacity: 0.5; cursor: wait; }
+  .msg {
+    margin-top: 14px; padding: 12px; border-radius: 9px;
+    font-size: 13px; display: none; text-align: center; font-weight: 600;
+  }
+  .msg.error {
+    background: rgba(239,68,68,0.1); color: #f87171;
+    border: 1px solid rgba(239,68,68,0.3); display: block;
+  }
+  .login-link {
+    text-align: center; margin-top: 18px;
+    font-size: 13px; color: var(--muted);
+  }
+  .login-link a { color: var(--blue-soft); text-decoration: none; font-weight: 700; }
+  .login-link a:hover { color: var(--cyan); }
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="box">
+  <span class="logo">✨</span>
+  <h1>ثبت‌نام</h1>
+  <p class="subtitle">صفحه شخصی خودت رو بساز</p>
+
+  <div class="field">
+    <label>نام کاربری</label>
+    <input type="text" id="username" placeholder="ali_reza" maxlength="20" autocomplete="username">
+    <div class="hint">حروف کوچک انگلیسی، عدد و _ — ۳ تا ۲۰ کاراکتر</div>
+  </div>
+
+  <div class="field">
+    <label>نام نمایشی</label>
+    <input type="text" id="name" placeholder="علی رضایی" maxlength="50">
+  </div>
+
+  <div class="field">
+    <label>رمز عبور</label>
+    <input type="password" id="password" placeholder="••••••" maxlength="50" autocomplete="new-password">
+    <div class="hint">حداقل ۴ کاراکتر</div>
+  </div>
+
+  <button id="btn" onclick="doSignup()">✨ ساخت حساب</button>
+  <div class="msg" id="msg"></div>
+
+  <div class="login-link">
+    قبلاً ثبت‌نام کردی؟ <a href="/login.html">وارد شو</a>
+  </div>
+</div>
+
+<script>
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [], w, h;
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for (let i = 0; i < 30; i++) {
+    particles.push({ x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.5+0.4, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, alpha: Math.random()*0.5+0.2, pulse: Math.random()*Math.PI*2 });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.pulse += 0.02;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+      const glow = Math.sin(p.pulse) * 0.3 + 0.7;
+      const alpha = p.alpha * glow;
+      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
+      gradient.addColorStop(0, `rgba(59, 130, 246, ${alpha})`);
+      gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(96, 165, 250, ${alpha})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+function showMsg(text, isError) {
+  const m = document.getElementById('msg');
+  m.textContent = text;
+  m.className = 'msg ' + (isError ? 'error' : '');
+}
+
+async function doSignup() {
+  const username = document.getElementById('username').value.trim().toLowerCase();
+  const name = document.getElementById('name').value.trim();
+  const password = document.getElementById('password').value;
+
+  if (!username) return showMsg('نام کاربری رو وارد کن', true);
+  if (!/^[a-z0-9_]{3,20}$/.test(username)) return showMsg('نام کاربری معتبر نیست', true);
+  if (password.length < 4) return showMsg('رمز حداقل ۴ کاراکتر', true);
+
+  const btn = document.getElementById('btn');
+  btn.disabled = true; btn.textContent = '⏳ در حال ساخت...';
+
+  try {
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, name, password })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      btn.disabled = false; btn.textContent = '✨ ساخت حساب';
+      return showMsg(data.error || 'خطا', true);
+    }
+    localStorage.setItem('bioToken', data.token);
+    localStorage.setItem('bioUsername', data.username);
+    window.location.href = '/dashboard.html';
+  } catch (e) {
+    btn.disabled = false; btn.textContent = '✨ ساخت حساب';
+    showMsg('خطا در ارتباط', true);
+  }
+}
+</script>
+</body>
+</html>
