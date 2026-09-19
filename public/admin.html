@@ -33,20 +33,9 @@
     backdrop-filter: blur(15px);
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
     animation: slideUp 0.5s ease;
-    position: relative; overflow: hidden;
-  }
-  .lock-box::before {
-    content: ''; position: absolute; top: 0; right: 0;
-    width: 4px; height: 100%;
-    background: linear-gradient(180deg, var(--blue), transparent);
-    opacity: 0.6;
   }
   @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-  .lock-box .icon {
-    font-size: 64px; display: block; margin-bottom: 16px;
-    animation: float 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 25px rgba(59,130,246,0.5));
-  }
+  .lock-box .icon { font-size: 64px; display: block; margin-bottom: 16px; animation: float 3s ease-in-out infinite; }
   @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
   .lock-box h2 {
     font-size: 22px; font-weight: 800; margin-bottom: 20px;
@@ -59,14 +48,13 @@
     color: var(--text); font-size: 15px; text-align: center;
     letter-spacing: 4px; font-family: inherit;
   }
-  .lock-box input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(59,130,246,0.15); }
+  .lock-box input:focus { outline: none; border-color: var(--blue); }
   .lock-box button {
     background: linear-gradient(135deg, var(--blue), var(--blue-soft));
     color: #fff; border: none; padding: 14px 22px;
     border-radius: 10px; cursor: pointer; font-size: 15px;
     font-weight: 800; font-family: inherit; width: 100%; margin-top: 16px;
   }
-  .lock-box button:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(59,130,246,0.5); }
   .lock-error {
     margin-top: 14px; padding: 10px; border-radius: 8px;
     font-size: 13px; font-weight: 600;
@@ -104,7 +92,7 @@
   .btn.danger:hover { background: var(--danger); color: #fff; }
 
   .stats-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
     gap: 12px; margin-bottom: 20px;
   }
   .stat {
@@ -115,22 +103,11 @@
   .stat .lbl { font-size: 11px; color: var(--muted); margin-top: 4px; letter-spacing: 1px; }
 
   .card {
-    background: rgba(13,20,32,0.85);
-    border: 1px solid var(--border);
+    background: rgba(13,20,32,0.85); border: 1px solid var(--border);
     border-radius: 14px; padding: 20px; margin-bottom: 16px;
     backdrop-filter: blur(10px);
-    position: relative; overflow: hidden;
   }
-  .card::before {
-    content: ''; position: absolute; top: 0; right: 0;
-    width: 3px; height: 100%;
-    background: linear-gradient(180deg, var(--blue), transparent);
-    opacity: 0.6;
-  }
-  .card h2 {
-    font-size: 15px; font-weight: 800; margin-bottom: 16px;
-    color: var(--blue-soft); letter-spacing: 1px;
-  }
+  .card h2 { font-size: 15px; font-weight: 800; margin-bottom: 16px; color: var(--blue-soft); }
 
   .tabs {
     display: flex; gap: 4px; margin-bottom: 16px;
@@ -156,36 +133,22 @@
   .search-box input:focus { outline: none; border-color: var(--blue); }
 
   .item-row {
-    background: rgba(5,7,13,0.5);
-    border: 1px solid var(--border);
+    background: rgba(5,7,13,0.5); border: 1px solid var(--border);
     border-radius: 10px; padding: 14px; margin-bottom: 10px;
     display: flex; align-items: center; gap: 12px;
-    transition: all 0.25s;
-    flex-wrap: wrap;
+    transition: all 0.25s; flex-wrap: wrap;
   }
   .item-row:hover { border-color: rgba(59,130,246,0.4); }
-  .item-row.banned { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.3); opacity: 0.8; }
+  .item-row.banned { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.3); opacity: 0.85; }
 
-  .item-row .avatar {
-    width: 44px; height: 44px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 900; color: #fff; font-size: 14px; flex-shrink: 0;
-  }
   .item-row .info { flex: 1; min-width: 150px; }
-  .item-row .info .t {
-    font-size: 13px; font-weight: 700; margin-bottom: 3px;
-    word-break: break-word;
-  }
-  .item-row .info .s {
-    font-size: 11px; color: var(--muted);
-    word-break: break-all;
-  }
+  .item-row .info .t { font-size: 13px; font-weight: 700; margin-bottom: 3px; word-break: break-word; }
+  .item-row .info .s { font-size: 11px; color: var(--muted); word-break: break-all; }
   .item-row .url {
     font-family: 'Consolas', monospace; font-size: 11px;
     color: var(--muted); direction: ltr; text-align: left;
     background: rgba(0,0,0,0.3); padding: 5px 10px;
-    border-radius: 6px; word-break: break-all;
-    width: 100%;
+    border-radius: 6px; word-break: break-all; width: 100%;
   }
   .item-row .actions { display: flex; gap: 6px; flex-wrap: wrap; }
   .item-row button {
@@ -194,40 +157,18 @@
     border: none; transition: all 0.25s;
     display: inline-flex; align-items: center; gap: 4px;
   }
-  .item-row button.ban {
-    background: rgba(239,68,68,0.15); color: var(--danger);
-    border: 1px solid rgba(239,68,68,0.3);
-  }
+  .item-row button.ban { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
   .item-row button.ban:hover { background: var(--danger); color: #fff; }
-  .item-row button.unban {
-    background: rgba(34,197,94,0.15); color: var(--success);
-    border: 1px solid rgba(34,197,94,0.3);
-  }
+  .item-row button.unban { background: rgba(34,197,94,0.15); color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
   .item-row button.unban:hover { background: var(--success); color: #fff; }
-  .item-row button.del {
-    background: rgba(239,68,68,0.15); color: var(--danger);
-    border: 1px solid rgba(239,68,68,0.3);
-  }
+  .item-row button.del { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
   .item-row button.del:hover { background: var(--danger); color: #fff; }
-  .item-row button.view {
-    background: rgba(59,130,246,0.15); color: var(--blue-soft);
-    border: 1px solid rgba(59,130,246,0.3);
-    text-decoration: none;
-  }
+  .item-row button.view { background: rgba(59,130,246,0.15); color: var(--blue-soft); border: 1px solid rgba(59,130,246,0.3); text-decoration: none; }
   .item-row button.view:hover { background: var(--blue); color: #fff; }
 
-  .banned-badge {
-    background: var(--danger); color: #fff;
-    padding: 2px 8px; border-radius: 5px;
-    font-size: 10px; font-weight: 700;
-  }
-
+  .banned-badge { background: var(--danger); color: #fff; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: 700; }
   .empty { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
-
-  .msg {
-    margin-top: 12px; padding: 10px; border-radius: 8px;
-    font-size: 12px; display: none; text-align: center; font-weight: 600;
-  }
+  .msg { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 12px; display: none; text-align: center; font-weight: 600; }
   .msg.success { background: rgba(34,197,94,0.1); color: var(--success); display: block; }
   .msg.error { background: rgba(239,68,68,0.1); color: #f87171; display: block; }
 </style>
@@ -249,7 +190,7 @@
 <div id="adminPanel">
   <div class="container">
     <div class="topbar">
-      <h1>🔐 پنل ادمین بیوکده</h1>
+      <h1>🔐 پنل ادمین</h1>
       <div class="actions">
         <a href="/" class="btn">🏠 سایت</a>
         <button class="btn danger" onclick="logout()">🚪 خروج</button>
@@ -271,6 +212,7 @@
     <div class="card">
       <div class="tabs">
         <div class="tab active" onclick="switchTab('users', this)">👥 کاربران</div>
+        <div class="tab" onclick="switchTab('blogs', this)">📝 وبلاگ‌ها</div>
         <div class="tab" onclick="switchTab('links', this)">🔗 لینک‌ها</div>
         <div class="tab" onclick="switchTab('banned', this)">🚫 بن‌شده‌ها</div>
       </div>
@@ -283,7 +225,6 @@
 </div>
 
 <script>
-// ذرات
 (function() {
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
@@ -314,17 +255,9 @@
   draw();
 })();
 
-const GRADIENTS = {
-  gradient1: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
-  gradient2: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
-  gradient3: 'linear-gradient(135deg, #f59e0b, #ef4444)',
-  gradient4: 'linear-gradient(135deg, #10b981, #06b6d4)',
-  gradient5: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-  gradient6: 'linear-gradient(135deg, #ef4444, #f97316)'
-};
-
 let adminPassword = sessionStorage.getItem('bioAdminPass') || '';
 let usersData = [];
+let blogsData = [];
 let linksData = [];
 let bannedData = [];
 let currentTab = 'users';
@@ -380,15 +313,17 @@ function switchTab(name, el) {
 async function loadAll() {
   try {
     const headers = { 'x-admin-password': adminPassword };
-    const [uRes, lRes, bRes] = await Promise.all([
+    const [uRes, bRes, lRes, banRes] = await Promise.all([
       fetch('/api/admin/users', { headers }),
+      fetch('/api/admin/blogs', { headers }),
       fetch('/api/admin/links', { headers }),
       fetch('/api/admin/banned-links', { headers })
     ]);
     if (uRes.status === 401) { logout(); return; }
     usersData = await uRes.json();
+    blogsData = await bRes.json();
     linksData = await lRes.json();
-    bannedData = await bRes.json();
+    bannedData = await banRes.json();
     updateStats();
     render();
   } catch (e) {
@@ -399,7 +334,7 @@ async function loadAll() {
 function updateStats() {
   document.getElementById('statsGrid').innerHTML = `
     <div class="stat"><div class="val">${usersData.length}</div><div class="lbl">کاربر</div></div>
-    <div class="stat"><div class="val">${usersData.filter(u => u.banned).length}</div><div class="lbl">کاربر بن‌شده</div></div>
+    <div class="stat"><div class="val">${blogsData.length}</div><div class="lbl">وبلاگ</div></div>
     <div class="stat"><div class="val">${linksData.length}</div><div class="lbl">لینک</div></div>
     <div class="stat"><div class="val">${bannedData.length}</div><div class="lbl">لینک بن‌شده</div></div>
   `;
@@ -407,13 +342,6 @@ function updateStats() {
 
 function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-}
-
-function getInitials(name) {
-  if (!name) return '?';
-  const parts = name.trim().split(/\s+/);
-  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
-  return name.slice(0, 2).toUpperCase();
 }
 
 function render() {
@@ -424,35 +352,50 @@ function render() {
     let list = usersData;
     if (search) list = list.filter(u => u.username.toLowerCase().includes(search) || (u.name || '').toLowerCase().includes(search));
     if (!list.length) { c.innerHTML = '<div class="empty">کاربری پیدا نشد</div>'; return; }
-    c.innerHTML = list.map(u => {
-      const grad = GRADIENTS[u.avatarStyle] || GRADIENTS.gradient1;
-      return `
-        <div class="item-row ${u.banned ? 'banned' : ''}">
-          <div class="avatar" style="background:${grad}">${getInitials(u.name || u.username)}</div>
-          <div class="info">
-            <div class="t">${escapeHtml(u.name || u.username)} ${u.banned ? '<span class="banned-badge">بن</span>' : ''}</div>
-            <div class="s">@${escapeHtml(u.username)} • ${u.linksCount} لینک • ${u.views} بازدید</div>
-          </div>
-          <div class="actions">
-            <a href="/u/${escapeHtml(u.username)}" target="_blank" class="btn view">👁 مشاهده</a>
-            ${u.banned
-              ? `<button class="unban" onclick="unbanUser('${escapeHtml(u.username)}')">✓ آنبن</button>`
-              : `<button class="ban" onclick="banUser('${escapeHtml(u.username)}')">🚫 بن</button>`
-            }
-            <button class="del" onclick="deleteUser('${escapeHtml(u.username)}')">🗑 حذف</button>
-          </div>
+    c.innerHTML = list.map(u => `
+      <div class="item-row ${u.banned ? 'banned' : ''}">
+        <div class="info">
+          <div class="t">👤 ${escapeHtml(u.name || u.username)} ${u.banned ? '<span class="banned-badge">بن</span>' : ''}</div>
+          <div class="s">@${escapeHtml(u.username)} • ${u.blogsCount} وبلاگ</div>
         </div>
-      `;
-    }).join('');
+        <div class="actions">
+          ${u.banned
+            ? `<button class="unban" onclick="unbanUser('${escapeHtml(u.username)}')">✓ آنبن</button>`
+            : `<button class="ban" onclick="banUser('${escapeHtml(u.username)}')">🚫 بن</button>`
+          }
+          <button class="del" onclick="deleteUser('${escapeHtml(u.username)}')">🗑 حذف</button>
+        </div>
+      </div>
+    `).join('');
+  } else if (currentTab === 'blogs') {
+    let list = blogsData;
+    if (search) list = list.filter(b => b.username.toLowerCase().includes(search) || b.owner.toLowerCase().includes(search));
+    if (!list.length) { c.innerHTML = '<div class="empty">وبلاگی پیدا نشد</div>'; return; }
+    c.innerHTML = list.map(b => `
+      <div class="item-row ${b.banned ? 'banned' : ''}">
+        <div class="info">
+          <div class="t">📝 ${escapeHtml(b.name || b.username)} ${b.banned ? '<span class="banned-badge">بن</span>' : ''}</div>
+          <div class="s">/u/${escapeHtml(b.username)} • مالک: @${escapeHtml(b.owner)} • ${b.linksCount} لینک • ${b.views} بازدید</div>
+        </div>
+        <div class="actions">
+          <a href="/u/${escapeHtml(b.username)}" target="_blank" class="btn view">👁</a>
+          ${b.banned
+            ? `<button class="unban" onclick="unbanBlog('${escapeHtml(b.id)}')">✓ آنبن</button>`
+            : `<button class="ban" onclick="banBlog('${escapeHtml(b.id)}')">🚫 بن</button>`
+          }
+          <button class="del" onclick="deleteBlog('${escapeHtml(b.id)}')">🗑</button>
+        </div>
+      </div>
+    `).join('');
   } else if (currentTab === 'links') {
     let list = linksData;
-    if (search) list = list.filter(l => l.title.toLowerCase().includes(search) || l.url.toLowerCase().includes(search) || l.username.toLowerCase().includes(search));
+    if (search) list = list.filter(l => l.title.toLowerCase().includes(search) || l.url.toLowerCase().includes(search) || l.blogUsername.toLowerCase().includes(search));
     if (!list.length) { c.innerHTML = '<div class="empty">لینکی پیدا نشد</div>'; return; }
     c.innerHTML = list.map(l => `
       <div class="item-row ${l.banned ? 'banned' : ''}">
         <div class="info">
           <div class="t">🔗 ${escapeHtml(l.title)} ${l.banned ? '<span class="banned-badge">بن</span>' : ''}</div>
-          <div class="s">از <b>@${escapeHtml(l.username)}</b> • ${l.clicks} کلیک</div>
+          <div class="s">از /u/${escapeHtml(l.blogUsername)} • مالک: @${escapeHtml(l.owner)} • ${l.clicks} کلیک</div>
         </div>
         <div class="url">${escapeHtml(l.url)}</div>
         <div class="actions">
@@ -460,7 +403,7 @@ function render() {
             ? `<button class="unban" onclick="unbanLink('${encodeURIComponent(l.url)}')">✓ آنبن</button>`
             : `<button class="ban" onclick="banLink('${encodeURIComponent(l.url)}')">🚫 بن</button>`
           }
-          <button class="del" onclick="deleteLink('${escapeHtml(l.username)}', '${escapeHtml(l.linkId)}')">🗑 حذف</button>
+          <button class="del" onclick="deleteLink('${escapeHtml(l.blogId)}', '${escapeHtml(l.linkId)}')">🗑</button>
         </div>
       </div>
     `).join('');
@@ -479,74 +422,29 @@ function render() {
   }
 }
 
-async function banUser(username) {
-  if (!confirm('کاربر @' + username + ' بن بشه؟')) return;
-  await fetch('/api/admin/ban-user', {
+async function apiAdmin(path, body) {
+  const res = await fetch(path, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
-    body: JSON.stringify({ username })
+    body: body ? JSON.stringify(body) : undefined
   });
-  loadAll();
+  return res;
 }
 
-async function unbanUser(username) {
-  await fetch('/api/admin/unban-user', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
-    body: JSON.stringify({ username })
-  });
-  loadAll();
-}
-
-async function deleteUser(username) {
-  if (!confirm('کاربر @' + username + ' برای همیشه حذف بشه؟')) return;
-  await fetch('/api/admin/delete-user', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
-    body: JSON.stringify({ username })
-  });
-  loadAll();
-}
-
-async function banLink(urlEnc) {
-  const url = decodeURIComponent(urlEnc);
-  if (!confirm('این لینک بن بشه؟')) return;
-  await fetch('/api/admin/ban-link', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
-    body: JSON.stringify({ url })
-  });
-  loadAll();
-}
-
-async function unbanLink(urlEnc) {
-  const url = decodeURIComponent(urlEnc);
-  await fetch('/api/admin/unban-link', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
-    body: JSON.stringify({ url })
-  });
-  loadAll();
-}
-
-async function deleteLink(username, linkId) {
-  if (!confirm('این لینک حذف بشه؟')) return;
-  await fetch('/api/admin/delete-link', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
-    body: JSON.stringify({ username, linkId })
-  });
-  loadAll();
-}
+async function banUser(u) { if (!confirm('کاربر @' + u + ' بن بشه؟')) return; await apiAdmin('/api/admin/ban-user', { username: u }); loadAll(); }
+async function unbanUser(u) { await apiAdmin('/api/admin/unban-user', { username: u }); loadAll(); }
+async function deleteUser(u) { if (!confirm('کاربر @' + u + ' و همه وبلاگ‌هاش حذف بشن؟')) return; await apiAdmin('/api/admin/delete-user', { username: u }); loadAll(); }
+async function banBlog(id) { if (!confirm('وبلاگ بن بشه؟')) return; await apiAdmin('/api/admin/ban-blog', { id }); loadAll(); }
+async function unbanBlog(id) { await apiAdmin('/api/admin/unban-blog', { id }); loadAll(); }
+async function deleteBlog(id) { if (!confirm('وبلاگ حذف بشه؟')) return; await apiAdmin('/api/admin/delete-blog', { id }); loadAll(); }
+async function banLink(urlEnc) { const url = decodeURIComponent(urlEnc); if (!confirm('لینک بن بشه؟')) return; await apiAdmin('/api/admin/ban-link', { url }); loadAll(); }
+async function unbanLink(urlEnc) { const url = decodeURIComponent(urlEnc); await apiAdmin('/api/admin/unban-link', { url }); loadAll(); }
+async function deleteLink(blogId, linkId) { if (!confirm('لینک حذف بشه؟')) return; await apiAdmin('/api/admin/delete-link', { blogId, linkId }); loadAll(); }
 
 async function banManual() {
   const url = document.getElementById('banUrl').value.trim();
   if (!url) return showMsg('banMsg', 'لینک رو وارد کن', true);
-  await fetch('/api/admin/ban-link', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-admin-password': adminPassword },
-    body: JSON.stringify({ url })
-  });
+  await apiAdmin('/api/admin/ban-link', { url });
   document.getElementById('banUrl').value = '';
   showMsg('banMsg', '🚫 بن شد', false);
   loadAll();
