@@ -74,10 +74,12 @@
     font-weight: 700;
     display: flex; align-items: center; justify-content: center; gap: 8px;
   }
+
+  /* کارت لینک با آیکون کوچیک کنار اسم */
   .link-card {
-    display: flex; align-items: center; gap: 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
     background: rgba(13,20,32,0.85); border: 1px solid var(--border);
-    border-radius: 14px; padding: 16px 18px; margin-bottom: 12px;
+    border-radius: 14px; padding: 16px 20px; margin-bottom: 12px;
     text-decoration: none; color: var(--text);
     transition: all 0.3s ease; backdrop-filter: blur(10px);
     animation: slideUp 0.5s ease both; position: relative; overflow: hidden;
@@ -93,17 +95,23 @@
     box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 30px rgba(59,130,246,0.15);
   }
   .link-card:hover::before { opacity: 1; }
-  .link-icon {
-    font-size: 22px; flex-shrink: 0;
-    width: 44px; height: 44px;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(59,130,246,0.1); border-radius: 10px; color: var(--blue-soft);
-  }
-  .link-icon svg { width: 22px; height: 22px; }
+
   .link-info { flex: 1; min-width: 0; }
-  .link-title { font-weight: 700; font-size: 14px; margin-bottom: 3px; word-break: break-word; }
+  .link-title {
+    font-weight: 700; font-size: 14px; margin-bottom: 3px;
+    word-break: break-word;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .link-icon-inline {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px;
+    color: var(--blue-soft);
+    flex-shrink: 0;
+  }
+  .link-icon-inline svg { width: 16px; height: 16px; }
   .link-desc { color: var(--muted); font-size: 12px; word-break: break-word; }
   .link-arrow { color: var(--muted); font-size: 16px; transition: all 0.25s; flex-shrink: 0; }
+  .link-card:hover .link-arrow { color: var(--cyan); transform: translateX(-4px); }
 
   .footer {
     text-align: center; color: var(--muted); font-size: 11px;
@@ -243,9 +251,11 @@ async function load() {
           <a href="${escapeHtml(l.url)}" target="_blank" rel="noopener noreferrer"
              class="link-card" style="animation-delay:${0.15 + i * 0.05}s"
              onclick="countClick('${escapeHtml(user.username)}', '${escapeHtml(l.id)}')">
-            <div class="link-icon">${iconSvg}</div>
             <div class="link-info">
-              <div class="link-title">${escapeHtml(l.title)}</div>
+              <div class="link-title">
+                <span class="link-icon-inline">${iconSvg}</span>
+                ${escapeHtml(l.title)}
+              </div>
               ${l.description ? `<div class="link-desc">${escapeHtml(l.description)}</div>` : ''}
             </div>
             <div class="link-arrow">←</div>
