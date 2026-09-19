@@ -75,7 +75,6 @@
     display: flex; align-items: center; justify-content: center; gap: 8px;
   }
 
-  /* کارت لینک با آیکون کوچیک کنار اسم */
   .link-card {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     background: rgba(13,20,32,0.85); border: 1px solid var(--border);
@@ -142,6 +141,7 @@
 </div>
 
 <script>
+// ذرات
 (function() {
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
@@ -222,7 +222,8 @@ async function load() {
   }
 
   try {
-    const res = await fetch('/api/user/' + encodeURIComponent(username));
+    // ✅ آدرس API جدید
+    const res = await fetch('/api/blog/' + encodeURIComponent(username));
     const user = await res.json();
     if (!res.ok) {
       app.innerHTML = `<div class="error-page"><span class="icon">🚫</span><h1>${res.status === 403 ? 'مسدود شده' : 'پیدا نشد'}</h1><p>${escapeHtml(user.error || '')}</p><a href="/">بازگشت به خانه</a></div>`;
@@ -293,7 +294,8 @@ async function load() {
 
 async function countClick(username, linkId) {
   try {
-    await fetch('/api/user/' + username + '/link/' + linkId + '/click', { method: 'POST' });
+    // ✅ آدرس API جدید
+    await fetch('/api/blog/' + username + '/link/' + linkId + '/click', { method: 'POST' });
   } catch (e) {}
 }
 
