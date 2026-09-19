@@ -28,9 +28,7 @@
     text-decoration: none; display: flex; align-items: center; gap: 6px;
     transition: all 0.25s; z-index: 100; backdrop-filter: blur(10px);
   }
-  .admin-btn:hover {
-    background: var(--blue); color: #fff; transform: translateY(-2px);
-  }
+  .admin-btn:hover { background: var(--blue); color: #fff; transform: translateY(-2px); }
 
   header { text-align: center; padding: 40px 0 30px; border-bottom: 1px solid var(--border); margin-bottom: 30px; }
   header .logo {
@@ -43,8 +41,7 @@
     50% { transform: translateY(-10px) rotate(2deg); }
   }
   header h1 {
-    font-size: 38px; font-weight: 900; letter-spacing: 3px;
-    margin-top: 12px;
+    font-size: 38px; font-weight: 900; letter-spacing: 3px; margin-top: 12px;
     background: linear-gradient(135deg, var(--blue), var(--cyan));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -65,19 +62,13 @@
     display: inline-flex; align-items: center; gap: 8px;
     backdrop-filter: blur(10px);
   }
-  .btn:hover {
-    border-color: var(--blue);
-    background: rgba(59,130,246,0.1);
-    transform: translateY(-2px);
-  }
+  .btn:hover { border-color: var(--blue); background: rgba(59,130,246,0.1); transform: translateY(-2px); }
   .btn.primary {
     background: linear-gradient(135deg, var(--blue), var(--blue-soft));
     color: #fff; border-color: transparent;
     box-shadow: 0 8px 25px rgba(59,130,246,0.4);
   }
-  .btn.primary:hover {
-    box-shadow: 0 12px 35px rgba(59,130,246,0.6);
-  }
+  .btn.primary:hover { box-shadow: 0 12px 35px rgba(59,130,246,0.6); }
   .btn svg { width: 16px; height: 16px; }
 
   .section-title {
@@ -85,22 +76,17 @@
     letter-spacing: 3px; text-transform: uppercase;
     margin-bottom: 16px; font-weight: 700;
   }
-
   .users-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 14px;
   }
-
   .user-card {
-    background: rgba(13,20,32,0.85);
-    border: 1px solid var(--border);
+    background: rgba(13,20,32,0.85); border: 1px solid var(--border);
     border-radius: 16px; padding: 20px;
     text-decoration: none; color: var(--text);
-    transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
-    animation: slideUp 0.5s ease both;
-    position: relative; overflow: hidden;
+    transition: all 0.3s ease; backdrop-filter: blur(10px);
+    animation: slideUp 0.5s ease both; position: relative; overflow: hidden;
     display: block;
   }
   .user-card::before {
@@ -110,21 +96,16 @@
     opacity: 0.6; transition: opacity 0.3s;
   }
   .user-card:hover {
-    border-color: rgba(59,130,246,0.6);
-    transform: translateY(-4px);
+    border-color: rgba(59,130,246,0.6); transform: translateY(-4px);
     box-shadow: 0 15px 45px rgba(0,0,0,0.6), 0 0 40px rgba(59,130,246,0.15);
   }
   .user-card:hover::before { opacity: 1; }
-
   .user-avatar {
-    width: 64px; height: 64px; border-radius: 50%;
-    margin-bottom: 14px;
+    width: 64px; height: 64px; border-radius: 50%; margin-bottom: 14px;
     display: flex; align-items: center; justify-content: center;
     font-size: 26px; font-weight: 900; color: #fff;
-    box-shadow: 0 8px 25px rgba(59,130,246,0.3);
-    letter-spacing: 1px;
+    box-shadow: 0 8px 25px rgba(59,130,246,0.3); letter-spacing: 1px;
   }
-
   .user-name { font-size: 17px; font-weight: 800; margin-bottom: 4px; word-break: break-word; }
   .user-username { color: var(--blue-soft); font-size: 12px; margin-bottom: 8px; font-weight: 600; }
   .user-bio {
@@ -135,33 +116,17 @@
   .user-stats {
     display: flex; gap: 14px; margin-top: 12px;
     padding-top: 12px; border-top: 1px solid var(--border);
-    font-size: 11px; color: var(--muted);
-    align-items: center;
+    font-size: 11px; color: var(--muted); align-items: center;
   }
   .user-stats svg { width: 13px; height: 13px; margin-left: 4px; }
 
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   .empty { text-align: center; padding: 60px 20px; color: var(--muted); }
   .empty .icon { font-size: 72px; opacity: 0.3; margin-bottom: 14px; display: block; }
-
-  .info-box {
-    background: rgba(13,20,32,0.6);
-    border: 1px solid var(--border);
-    border-radius: 14px; padding: 20px;
-    margin-top: 30px; text-align: center;
-  }
-  .info-box h3 { color: var(--blue-soft); font-size: 14px; margin-bottom: 10px; letter-spacing: 1px; }
-  .info-box p { color: var(--muted); font-size: 12px; line-height: 1.8; }
-
   .footer {
-    text-align: center; color: var(--muted);
-    font-size: 11px; margin-top: 40px;
-    padding-top: 20px; border-top: 1px solid var(--border);
-    letter-spacing: 1px;
+    text-align: center; color: var(--muted); font-size: 11px;
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid var(--border); letter-spacing: 1px;
   }
 </style>
 </head>
@@ -177,31 +142,27 @@
     <p>صفحه شخصی خودت رو بساز و لینکت رو به همه بده</p>
   </header>
 
-  <div class="nav-buttons">
-    <a href="/create.html" class="btn primary">
+  <div class="nav-buttons" id="navButtons">
+    <a href="/signup.html" class="btn primary" id="signupBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-      ساخت وبلاگ جدید
+      ثبت‌نام
     </a>
-    <a href="/dashboard.html" class="btn">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
-      وبلاگ‌های من
+    <a href="/login.html" class="btn" id="loginBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      ورود
     </a>
   </div>
 
   <div class="section-title">🔥 وبلاگ‌های فعال</div>
-  <div class="users-grid" id="blogs">
+  <div class="users-grid" id="users">
     <div class="empty" style="grid-column: 1/-1;"><div class="icon">⏳</div><p>در حال بارگذاری...</p></div>
-  </div>
-
-  <div class="info-box">
-    <h3>🎁 کاملاً رایگان</h3>
-    <p>هر مرورگر می‌تونه تا <b style="color:var(--blue-soft)">۵ وبلاگ جداگانه</b> بسازه — بدون ثبت‌نام، بدون ایمیل، بدون رمز.</p>
   </div>
 
   <div class="footer">ساخته شده با ❤️ — بیوکده</div>
 </div>
 
 <script>
+// ذرات
 (function() {
   const canvas = document.getElementById('particles');
   const ctx = canvas.getContext('2d');
@@ -210,15 +171,7 @@
   resize(); window.addEventListener('resize', resize);
   const COUNT = window.innerWidth < 600 ? 25 : 55;
   for (let i = 0; i < COUNT; i++) {
-    particles.push({
-      x: Math.random()*w, y: Math.random()*h,
-      r: Math.random()*1.8+0.4,
-      vx: (Math.random()-0.5)*0.25,
-      vy: (Math.random()-0.5)*0.25,
-      alpha: Math.random()*0.5+0.2,
-      pulse: Math.random()*Math.PI*2,
-      hue: Math.random() > 0.5 ? 217 : 190
-    });
+    particles.push({ x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.8+0.4, vx: (Math.random()-0.5)*0.25, vy: (Math.random()-0.5)*0.25, alpha: Math.random()*0.5+0.2, pulse: Math.random()*Math.PI*2, hue: Math.random() > 0.5 ? 217 : 190 });
   }
   function draw() {
     ctx.clearRect(0, 0, w, h);
@@ -237,21 +190,6 @@
       ctx.fillStyle = `rgba(${color}, ${alpha})`;
       ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
     });
-    for (let i = 0; i < particles.length; i++) {
-      for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx*dx + dy*dy);
-        if (dist < 120) {
-          ctx.strokeStyle = `rgba(59, 130, 246, ${(1 - dist/120) * 0.12})`;
-          ctx.lineWidth = 0.5;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.stroke();
-        }
-      }
-    }
     requestAnimationFrame(draw);
   }
   draw();
@@ -279,43 +217,47 @@ function getInitials(name) {
 }
 
 function escapeHtml(s) {
-  return String(s || '').replace(/[&<>"']/g, c => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-  })[c]);
+  return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 }
 
-async function loadBlogs() {
-  try {
-    const res = await fetch('/api/blogs');
-    const blogs = await res.json();
-    const c = document.getElementById('blogs');
+// اگه کاربر لاگین شده، دکمه‌ها رو عوض کن
+const token = localStorage.getItem('bioToken');
+const username = localStorage.getItem('bioUsername');
+if (token && username) {
+  document.getElementById('navButtons').innerHTML = `
+    <a href="/dashboard.html" class="btn primary">📝 پنل من</a>
+    <a href="/u/${escapeHtml(username)}" class="btn">👁 وبلاگم</a>
+  `;
+}
 
-    if (!blogs.length) {
-      c.innerHTML = '<div class="empty" style="grid-column: 1/-1;"><span class="icon">✨</span><p>هنوز کسی وبلاگ نساخته. اولین نفر باش!</p></div>';
+async function loadUsers() {
+  try {
+    const res = await fetch('/api/users');
+    const users = await res.json();
+    const c = document.getElementById('users');
+    if (!users.length) {
+      c.innerHTML = '<div class="empty" style="grid-column: 1/-1;"><span class="icon">✨</span><p>هنوز کسی ثبت‌نام نکرده. اولین نفر باش!</p></div>';
       return;
     }
-
-    c.innerHTML = blogs.map((b, i) => {
-      const gradient = GRADIENTS[b.avatarStyle] || GRADIENTS.gradient1;
+    c.innerHTML = users.map((u, i) => {
+      const gradient = GRADIENTS[u.avatarStyle] || GRADIENTS.gradient1;
       return `
-        <a href="/u/${b.username}" class="user-card" style="animation-delay: ${i * 0.05}s">
-          <div class="user-avatar" style="background: ${gradient}">${getInitials(b.name || b.username)}</div>
-          <div class="user-name">${escapeHtml(b.name || b.username)}</div>
-          <div class="user-username">@${escapeHtml(b.username)}</div>
-          ${b.bio ? `<div class="user-bio">${escapeHtml(b.bio)}</div>` : ''}
+        <a href="/u/${u.username}" class="user-card" style="animation-delay: ${i * 0.05}s">
+          <div class="user-avatar" style="background: ${gradient}">${getInitials(u.name || u.username)}</div>
+          <div class="user-name">${escapeHtml(u.name || u.username)}</div>
+          <div class="user-username">@${escapeHtml(u.username)}</div>
+          ${u.bio ? `<div class="user-bio">${escapeHtml(u.bio)}</div>` : ''}
           <div class="user-stats">
-            <span>${SVG_ICONS.link} ${b.linksCount}</span>
-            <span>${SVG_ICONS.eye} ${b.views}</span>
+            <span>${SVG_ICONS.link} ${u.linksCount}</span>
+            <span>${SVG_ICONS.eye} ${u.views}</span>
           </div>
         </a>
       `;
     }).join('');
-  } catch (e) {
-    document.getElementById('blogs').innerHTML = '<div class="empty" style="grid-column: 1/-1;">خطا در بارگذاری</div>';
-  }
+  } catch (e) {}
 }
 
-loadBlogs();
+loadUsers();
 </script>
 </body>
 </html>
