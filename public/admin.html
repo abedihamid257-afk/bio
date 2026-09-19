@@ -93,4 +93,516 @@
   }
   .lock-box button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10
+    box-shadow: 0 10px 30px rgba(59,130,246,0.5);
+  }
+  .lock-error {
+    margin-top: 14px; padding: 10px; border-radius: 8px;
+    font-size: 13px; font-weight: 600;
+    background: rgba(239,68,68,0.1); color: #f87171;
+    border: 1px solid rgba(239,68,68,0.3);
+    display: none;
+  }
+  .lock-error.show { display: block; animation: slideUp 0.3s ease; }
+
+  #adminPanel { display: none; }
+  #adminPanel.show { display: block; }
+
+  .logout-btn {
+    position: fixed; top: 16px; left: 16px;
+    background: rgba(13,20,32,0.85); color: var(--danger);
+    border: 1px solid var(--danger); padding: 8px 16px;
+    border-radius: 10px; font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: all 0.25s; z-index: 100;
+    backdrop-filter: blur(10px); font-family: inherit;
+  }
+  .logout-btn:hover { background: var(--danger); color: #fff; }
+
+  header { text-align: center; padding: 30px 0 20px; }
+  header .logo {
+    font-size: 52px; display: inline-block;
+    animation: float 3.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(59,130,246,0.4));
+  }
+  header h1 {
+    font-size: 26px; font-weight: 800; letter-spacing: 3px; margin-top: 8px;
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  header p { color: var(--muted); font-size: 12px; margin-top: 6px; }
+
+  .card {
+    background: rgba(13,20,32,0.85);
+    border: 1px solid var(--border);
+    border-radius: 14px; padding: 22px; margin-bottom: 16px;
+    backdrop-filter: blur(10px);
+    animation: slideUp 0.5s ease both;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--blue), transparent);
+    opacity: 0.6;
+  }
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+
+  label {
+    display: block; margin-bottom: 10px;
+    font-size: 11px; color: var(--blue-soft); letter-spacing: 2px;
+    text-transform: uppercase; font-weight: 700;
+  }
+  input[type="text"] {
+    width: 100%; padding: 12px 15px; border-radius: 9px;
+    border: 1px solid var(--border); background: rgba(5,7,13,0.8);
+    color: var(--text); font-size: 13px; font-family: inherit;
+    transition: all 0.25s; direction: ltr;
+  }
+  input:focus {
+    outline: none; border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  }
+
+  button.action {
+    background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+    color: #fff; border: none; padding: 12px 22px; border-radius: 9px;
+    cursor: pointer; font-size: 13px; font-weight: 700;
+    font-family: inherit; width: 100%; margin-top: 10px;
+    transition: all 0.25s;
+  }
+  button.action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59,130,246,0.4);
+  }
+  button.danger {
+    background: transparent; color: var(--danger);
+    border: 1px solid var(--danger);
+  }
+  button.danger:hover {
+    background: var(--danger); color: #fff;
+  }
+
+  .msg {
+    margin-top: 12px; padding: 11px; border-radius: 9px;
+    font-size: 13px; display: none; text-align: center; font-weight: 600;
+  }
+  .msg.success {
+    background: rgba(34,197,94,0.1); color: var(--success);
+    border: 1px solid rgba(34,197,94,0.3); display: block;
+  }
+  .msg.error {
+    background: rgba(239,68,68,0.1); color: #f87171;
+    border: 1px solid rgba(239,68,68,0.3); display: block;
+  }
+
+  .link-row {
+    background: rgba(5,7,13,0.5);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px;
+    margin-bottom: 10px;
+    display: flex; flex-direction: column; gap: 8px;
+    transition: all 0.25s;
+  }
+  .link-row:hover {
+    border-color: rgba(59,130,246,0.4);
+  }
+  .link-row.banned {
+    background: rgba(239,68,68,0.06);
+    border-color: rgba(239,68,68,0.3);
+    opacity: 0.75;
+  }
+  .link-row .header-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 10px; flex-wrap: wrap;
+  }
+  .link-row .title {
+    font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .link-row .blog-info {
+    font-size: 11px; color: var(--muted);
+  }
+  .link-row .blog-info b {
+    color: var(--blue-soft);
+  }
+  .link-row .url {
+    font-family: 'Consolas', monospace; font-size: 11px;
+    color: var(--muted); direction: ltr; word-break: break-all;
+    background: rgba(0,0,0,0.3); padding: 6px 10px; border-radius: 6px;
+  }
+  .link-row .actions {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .link-row button {
+    padding: 6px 14px; border-radius: 7px; font-size: 11px;
+    font-weight: 700; cursor: pointer; font-family: inherit;
+    transition: all 0.25s; border: none;
+    display: inline-flex; align-items: center; gap: 4px;
+  }
+  .link-row button.ban {
+    background: rgba(239,68,68,0.15); color: var(--danger);
+    border: 1px solid rgba(239,68,68,0.3);
+  }
+  .link-row button.ban:hover {
+    background: var(--danger); color: #fff;
+  }
+  .link-row button.unban {
+    background: rgba(34,197,94,0.15); color: var(--success);
+    border: 1px solid rgba(34,197,94,0.3);
+  }
+  .link-row button.unban:hover {
+    background: var(--success); color: #fff;
+  }
+
+  .banned-badge {
+    background: var(--danger); color: #fff;
+    padding: 2px 8px; border-radius: 5px;
+    font-size: 10px; font-weight: 700;
+  }
+
+  .empty {
+    text-align: center; padding: 30px 20px;
+    color: var(--muted); font-size: 13px;
+  }
+
+  .tabs-sm {
+    display: flex; gap: 4px; margin-bottom: 16px;
+    background: rgba(5,7,13,0.8); padding: 4px;
+    border-radius: 10px; border: 1px solid var(--border);
+  }
+  .tab-sm {
+    flex: 1; padding: 10px; text-align: center; cursor: pointer;
+    border-radius: 7px; color: var(--muted); font-size: 12px;
+    font-weight: 600; transition: all 0.25s;
+  }
+  .tab-sm.active {
+    background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+    color: #fff;
+  }
+
+  .stats-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .stat {
+    background: rgba(5,7,13,0.6); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px; text-align: center;
+  }
+  .stat .val {
+    font-size: 22px; font-weight: 800; color: var(--blue-soft);
+  }
+  .stat .lbl {
+    font-size: 10px; color: var(--muted); margin-top: 3px;
+    letter-spacing: 1px; text-transform: uppercase;
+  }
+
+  .search-box {
+    margin-bottom: 14px;
+  }
+  .search-box input {
+    text-align: right; direction: rtl;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div id="lockScreen">
+  <div class="lock-box">
+    <span class="lock-icon">🔐</span>
+    <h2>ورود ادمین</h2>
+    <p>رمز را وارد کن</p>
+    <input type="password" id="lockInput" placeholder="• • • •" maxlength="20" inputmode="numeric">
+    <button onclick="tryUnlock()">🔓 ورود</button>
+    <div class="lock-error" id="lockError">❌ رمز اشتباه است</div>
+  </div>
+</div>
+
+<div id="adminPanel">
+  <button class="logout-btn" onclick="logout()">🚪 خروج</button>
+
+  <div class="container">
+    <header>
+      <div class="logo">🔐</div>
+      <h1>پنل ادمین</h1>
+      <p>مدیریت لینک‌های بیوکده</p>
+    </header>
+
+    <div class="card">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="val" id="statLinks">0</div>
+          <div class="lbl">کل لینک‌ها</div>
+        </div>
+        <div class="stat">
+          <div class="val" id="statBanned">0</div>
+          <div class="lbl">لینک بن‌شده</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <label>➕ بن کردن لینک دستی</label>
+      <input type="text" id="banUrl" placeholder="https://example.com/page">
+      <button class="action" onclick="banManual()">🚫 بن کن</button>
+      <div class="msg" id="banMsg"></div>
+    </div>
+
+    <div class="card">
+      <label>🔗 همه لینک‌ها</label>
+      <div class="tabs-sm">
+        <div class="tab-sm active" onclick="switchTab('all', this)">📋 همه</div>
+        <div class="tab-sm" onclick="switchTab('banned', this)">🚫 بن‌شده‌ها</div>
+      </div>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 جستجو در لینک‌ها..." oninput="renderLinks()">
+      </div>
+      <div id="linksList"><div class="empty">در حال بارگذاری...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ ذرات ============
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [], w, h;
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for (let i = 0; i < 35; i++) {
+    particles.push({ x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.6+0.4, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, alpha: Math.random()*0.5+0.2, pulse: Math.random()*Math.PI*2 });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.pulse += 0.02;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+      const glow = Math.sin(p.pulse) * 0.3 + 0.7;
+      const alpha = p.alpha * glow;
+      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
+      gradient.addColorStop(0, `rgba(59, 130, 246, ${alpha})`);
+      gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(96, 165, 250, ${alpha})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ============ متغیرها ============
+let adminPassword = sessionStorage.getItem('bioAdminPass') || '';
+let allLinks = [];
+let currentTab = 'all';
+
+if (adminPassword) showPanel();
+
+async function tryUnlock() {
+  const pass = document.getElementById('lockInput').value.trim();
+  if (!pass) {
+    showLockError('رمز را وارد کن');
+    return;
+  }
+  try {
+    const res = await fetch('/api/admin/all-links', {
+      headers: { 'x-admin-password': pass }
+    });
+    if (res.status === 401) throw new Error('wrong');
+    adminPassword = pass;
+    sessionStorage.setItem('bioAdminPass', pass);
+    showPanel();
+  } catch (e) {
+    showLockError('رمز اشتباه است');
+    const inp = document.getElementById('lockInput');
+    inp.value = '';
+    inp.classList.add('error');
+    setTimeout(() => inp.classList.remove('error'), 500);
+  }
+}
+
+function showLockError(text) {
+  const e = document.getElementById('lockError');
+  e.textContent = '❌ ' + text;
+  e.classList.add('show');
+  setTimeout(() => e.classList.remove('show'), 3000);
+}
+
+function showPanel() {
+  document.getElementById('lockScreen').classList.add('hidden');
+  document.getElementById('adminPanel').classList.add('show');
+  loadLinks();
+}
+
+function logout() {
+  if (!confirm('از پنل خارج می‌شی؟')) return;
+  sessionStorage.removeItem('bioAdminPass');
+  adminPassword = '';
+  location.reload();
+}
+
+document.getElementById('lockInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') tryUnlock();
+});
+
+// ============ تب‌ها ============
+function switchTab(name, el) {
+  document.querySelectorAll('.tab-sm').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentTab = name;
+  renderLinks();
+}
+
+// ============ بارگذاری ============
+async function loadLinks() {
+  try {
+    const res = await fetch('/api/admin/all-links', {
+      headers: { 'x-admin-password': adminPassword }
+    });
+    if (res.status === 401) { logout(); return; }
+    allLinks = await res.json();
+
+    const bannedCount = allLinks.filter(l => l.banned).length;
+    document.getElementById('statLinks').textContent = allLinks.length;
+    document.getElementById('statBanned').textContent = bannedCount;
+
+    renderLinks();
+  } catch (e) {
+    document.getElementById('linksList').innerHTML = '<div class="empty">خطا در بارگذاری</div>';
+  }
+}
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[c]);
+}
+
+function renderLinks() {
+  const c = document.getElementById('linksList');
+  const search = (document.getElementById('searchInput').value || '').toLowerCase();
+
+  let filtered = allLinks;
+  if (currentTab === 'banned') filtered = filtered.filter(l => l.banned);
+  if (search) {
+    filtered = filtered.filter(l =>
+      l.title.toLowerCase().includes(search) ||
+      l.url.toLowerCase().includes(search) ||
+      l.blogUsername.toLowerCase().includes(search)
+    );
+  }
+
+  if (!filtered.length) {
+    c.innerHTML = '<div class="empty">لینکی پیدا نشد</div>';
+    return;
+  }
+
+  c.innerHTML = filtered.map(l => `
+    <div class="link-row ${l.banned ? 'banned' : ''}">
+      <div class="header-row">
+        <div class="title">
+          🔗 ${escapeHtml(l.title)}
+          ${l.banned ? '<span class="banned-badge">بن‌شده</span>' : ''}
+        </div>
+        <div class="blog-info">از <b>@${escapeHtml(l.blogUsername)}</b></div>
+      </div>
+      <div class="url">${escapeHtml(l.url)}</div>
+      <div class="actions">
+        ${l.banned
+          ? `<button class="unban" onclick="unbanLink('${encodeURIComponent(l.url)}')">✓ آنبن کن</button>`
+          : `<button class="ban" onclick="banLink('${encodeURIComponent(l.url)}')">🚫 بن کن</button>`
+        }
+      </div>
+    </div>
+  `).join('');
+}
+
+// ============ بن / آنبن ============
+async function banLink(urlEncoded) {
+  const url = decodeURIComponent(urlEncoded);
+  if (!confirm('مطمئنی می‌خوای این لینک رو بن کنی؟')) return;
+
+  try {
+    const res = await fetch('/api/admin/ban-link', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-password': adminPassword
+      },
+      body: JSON.stringify({ url })
+    });
+    if (res.ok) {
+      showMsg('banMsg', '🚫 لینک بن شد', false);
+      loadLinks();
+    } else {
+      showMsg('banMsg', 'خطا', true);
+    }
+  } catch (e) {
+    showMsg('banMsg', 'خطا در ارتباط', true);
+  }
+}
+
+async function unbanLink(urlEncoded) {
+  const url = decodeURIComponent(urlEncoded);
+  if (!confirm('آنبن کنی؟')) return;
+
+  try {
+    const res = await fetch('/api/admin/unban-link', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-password': adminPassword
+      },
+      body: JSON.stringify({ url })
+    });
+    if (res.ok) {
+      showMsg('banMsg', '✓ آنبن شد', false);
+      loadLinks();
+    } else {
+      showMsg('banMsg', 'خطا', true);
+    }
+  } catch (e) {
+    showMsg('banMsg', 'خطا در ارتباط', true);
+  }
+}
+
+async function banManual() {
+  const url = document.getElementById('banUrl').value.trim();
+  if (!url) return showMsg('banMsg', 'لینک رو وارد کن', true);
+
+  try {
+    const res = await fetch('/api/admin/ban-link', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-admin-password': adminPassword
+      },
+      body: JSON.stringify({ url })
+    });
+    if (res.ok) {
+      showMsg('banMsg', '🚫 لینک بن شد', false);
+      document.getElementById('banUrl').value = '';
+      loadLinks();
+    } else {
+      showMsg('banMsg', 'خطا', true);
+    }
+  } catch (e) {
+    showMsg('banMsg', 'خطا در ارتباط', true);
+  }
+}
+
+function showMsg(id, text, isError) {
+  const m = document.getElementById(id);
+  m.textContent = text;
+  m.className = 'msg ' + (isError ? 'error' : 'success');
+  setTimeout(() => { m.className = 'msg'; }, 3000);
+}
+</script>
+</body>
+</html>
