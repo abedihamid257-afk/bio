@@ -226,17 +226,17 @@ const username = localStorage.getItem('bioUsername');
 if (token && username) {
   document.getElementById('navButtons').innerHTML = `
     <a href="/dashboard.html" class="btn primary">📝 پنل من</a>
-    <a href="/u/${escapeHtml(username)}" class="btn">👁 وبلاگم</a>
   `;
 }
 
 async function loadUsers() {
   try {
-    const res = await fetch('/api/users');
+    // ✅ آدرس API جدید
+    const res = await fetch('/api/blogs');
     const users = await res.json();
     const c = document.getElementById('users');
     if (!users.length) {
-      c.innerHTML = '<div class="empty" style="grid-column: 1/-1;"><span class="icon">✨</span><p>هنوز کسی ثبت‌نام نکرده. اولین نفر باش!</p></div>';
+      c.innerHTML = '<div class="empty" style="grid-column: 1/-1;"><span class="icon">✨</span><p>هنوز کسی وبلاگ نساخته. اولین نفر باش!</p></div>';
       return;
     }
     c.innerHTML = users.map((u, i) => {
