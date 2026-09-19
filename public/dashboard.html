@@ -28,21 +28,18 @@
     margin-bottom: 20px; backdrop-filter: blur(10px);
     flex-wrap: wrap; gap: 10px;
   }
-  .topbar .user-info {
-    display: flex; align-items: center; gap: 12px;
-  }
-  .topbar .user-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
+  .topbar .user-info { display: flex; align-items: center; gap: 12px; }
+  .topbar .avatar {
+    width: 42px; height: 42px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-weight: 900; color: #fff; font-size: 15px;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
   }
   .topbar .user-text { font-size: 13px; }
   .topbar .user-text b { display: block; font-weight: 800; }
   .topbar .user-text span { color: var(--muted); font-size: 11px; }
+  .topbar .actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
-  .topbar .actions {
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
   .btn {
     padding: 9px 16px; border-radius: 9px;
     text-decoration: none; font-size: 12px; font-weight: 700;
@@ -59,18 +56,42 @@
   .btn.primary:hover { box-shadow: 0 8px 20px rgba(59,130,246,0.5); transform: translateY(-2px); }
   .btn.danger { color: var(--danger); border-color: rgba(239,68,68,0.3); }
   .btn.danger:hover { background: var(--danger); color: #fff; border-color: var(--danger); }
-  .btn svg { width: 14px; height: 14px; }
 
-  /* Layout دو ستونی */
+  /* انتخاب وبلاگ */
+  .blogs-bar {
+    display: flex; gap: 8px; margin-bottom: 20px;
+    overflow-x: auto; padding-bottom: 8px;
+    scrollbar-width: thin;
+  }
+  .blogs-bar::-webkit-scrollbar { height: 6px; }
+  .blogs-bar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .blog-chip {
+    padding: 10px 18px; border-radius: 11px;
+    background: rgba(13,20,32,0.85);
+    border: 1px solid var(--border);
+    color: var(--text); cursor: pointer;
+    font-size: 13px; font-weight: 700;
+    font-family: inherit; white-space: nowrap;
+    transition: all 0.25s;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .blog-chip:hover { border-color: var(--blue); }
+  .blog-chip.active {
+    background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+    color: #fff; border-color: transparent;
+    box-shadow: 0 8px 25px rgba(59,130,246,0.4);
+  }
+  .blog-chip.add {
+    background: rgba(34,197,94,0.1); color: var(--success);
+    border: 1px dashed var(--success);
+  }
+  .blog-chip.add:hover { background: var(--success); color: #fff; }
+
   .layout {
-    display: grid;
-    grid-template-columns: 1fr 380px;
-    gap: 20px;
-    align-items: start;
+    display: grid; grid-template-columns: 1fr 380px;
+    gap: 20px; align-items: start;
   }
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
 
   .card {
     background: rgba(13,20,32,0.85);
@@ -87,17 +108,13 @@
     background: linear-gradient(180deg, var(--blue), transparent);
     opacity: 0.6;
   }
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
   .card h2 {
     font-size: 16px; font-weight: 800; margin-bottom: 18px;
     color: var(--blue-soft); letter-spacing: 1px;
     display: flex; align-items: center; gap: 8px;
   }
-  .card h2 svg { width: 18px; height: 18px; }
 
   .field { margin-bottom: 14px; }
   label {
@@ -105,13 +122,13 @@
     font-size: 11px; color: var(--blue-soft);
     letter-spacing: 1px; text-transform: uppercase; font-weight: 700;
   }
-  input, textarea, select {
+  input, textarea {
     width: 100%; padding: 11px 14px; border-radius: 9px;
     border: 1px solid var(--border); background: rgba(5,7,13,0.8);
     color: var(--text); font-size: 13px; font-family: inherit;
     transition: all 0.25s;
   }
-  input:focus, textarea:focus, select:focus {
+  input:focus, textarea:focus {
     outline: none; border-color: var(--blue);
     box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
   }
@@ -129,16 +146,14 @@
   }
   button.action:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(59,130,246,0.5); }
   button.action:disabled { opacity: 0.5; cursor: wait; }
-  button.action svg { width: 15px; height: 15px; }
 
   .msg {
     margin-top: 12px; padding: 10px; border-radius: 8px;
     font-size: 12px; display: none; text-align: center; font-weight: 600;
   }
-  .msg.success { background: rgba(34,197,94,0.1); color: var(--success); border: 1px solid rgba(34,197,94,0.3); display: block; }
-  .msg.error { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.3); display: block; }
+  .msg.success { background: rgba(34,197,94,0.1); color: var(--success); display: block; border: 1px solid rgba(34,197,94,0.3); }
+  .msg.error { background: rgba(239,68,68,0.1); color: #f87171; display: block; border: 1px solid rgba(239,68,68,0.3); }
 
-  /* آواتار */
   .avatar-options { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
   .avatar-opt {
     width: 44px; height: 44px; border-radius: 50%;
@@ -150,7 +165,6 @@
   .avatar-opt:hover { transform: scale(1.1); }
   .avatar-opt.selected { border-color: var(--cyan); box-shadow: 0 0 18px rgba(6,182,212,0.6); transform: scale(1.1); }
 
-  /* لینک‌ها */
   .link-item {
     background: rgba(5,7,13,0.5); border: 1px solid var(--border);
     border-radius: 10px; padding: 12px; margin-bottom: 10px;
@@ -159,8 +173,7 @@
   .link-item .icon-box {
     width: 38px; height: 38px; border-radius: 9px;
     background: rgba(59,130,246,0.1); color: var(--blue-soft);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
   }
   .link-item .icon-box svg { width: 18px; height: 18px; }
   .link-item .info { flex: 1; min-width: 0; }
@@ -196,38 +209,106 @@
 
   .empty { text-align: center; padding: 20px; color: var(--muted); font-size: 13px; }
 
-  /* پیش‌نمایش */
   .preview-panel {
     position: sticky; top: 20px;
     background: rgba(13,20,32,0.85);
     border: 1px solid var(--border); border-radius: 16px;
-    padding: 16px;
-    backdrop-filter: blur(10px);
+    padding: 16px; backdrop-filter: blur(10px);
   }
-  .preview-panel .preview-head {
+  .preview-head {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 12px;
   }
-  .preview-panel .preview-head h3 {
-    font-size: 12px; color: var(--muted);
-    letter-spacing: 2px; text-transform: uppercase;
-  }
-  .preview-panel .preview-head a {
-    font-size: 11px; color: var(--blue-soft);
-    text-decoration: none; font-weight: 700;
-  }
+  .preview-head h3 { font-size: 12px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+  .preview-head a { font-size: 11px; color: var(--blue-soft); text-decoration: none; font-weight: 700; }
   .preview-frame {
-    background: var(--bg);
-    border-radius: 12px; overflow: hidden;
-    border: 1px solid var(--border);
-    height: 600px; overflow-y: auto;
+    background: var(--bg); border-radius: 12px; overflow: hidden;
+    border: 1px solid var(--border); height: 600px;
   }
-  .preview-frame::-webkit-scrollbar { width: 6px; }
-  .preview-frame::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .preview-frame iframe { width: 100%; height: 100%; border: none; }
 
-  .loading {
-    text-align: center; padding: 60px 20px;
-    color: var(--muted);
+  .loading { text-align: center; padding: 60px 20px; color: var(--muted); }
+
+  /* Modal */
+  .modal-bg {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: rgba(13,20,32,0.98);
+    border: 1px solid var(--border); border-radius: 18px;
+    padding: 30px; max-width: 460px; width: 100%;
+    animation: slideUp 0.4s ease;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  }
+  .modal h2 {
+    font-size: 18px; margin-bottom: 8px; color: var(--blue-soft);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .modal p.sub { color: var(--muted); font-size: 12px; margin-bottom: 20px; }
+  .modal-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .modal-actions button {
+    flex: 1; padding: 12px; border-radius: 10px;
+    border: none; cursor: pointer; font-size: 13px;
+    font-weight: 700; font-family: inherit;
+  }
+  .modal-actions .cancel { background: rgba(5,7,13,0.6); color: var(--text); border: 1px solid var(--border); }
+  .modal-actions .ok { background: linear-gradient(135deg, var(--blue), var(--blue-soft)); color: #fff; }
+
+  .big-toast {
+    position: fixed; bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(150px);
+    background: linear-gradient(135deg, #1a2942, #0d1420);
+    border: 1px solid var(--success); border-radius: 16px;
+    padding: 18px 24px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 60px rgba(34,197,94,0.2);
+    z-index: 3000;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 90vw; width: 400px; text-align: center;
+  }
+  .big-toast.show { transform: translateX(-50%) translateY(0); }
+  .big-toast .check-icon {
+    width: 56px; height: 56px; margin: 0 auto 12px;
+    border-radius: 50%; background: linear-gradient(135deg, #22c55e, #16a34a);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px; color: #fff;
+    box-shadow: 0 8px 25px rgba(34,197,94,0.5);
+    animation: popIn 0.5s ease;
+  }
+  @keyframes popIn { 0% { transform: scale(0); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+  .big-toast h3 { color: var(--success); font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+  .big-toast p { color: var(--muted); font-size: 12px; margin-bottom: 14px; }
+  .big-toast .link-preview {
+    background: rgba(5,7,13,0.8); border: 1px solid var(--border);
+    border-radius: 9px; padding: 10px 14px;
+    font-family: 'Consolas', monospace; font-size: 11px;
+    direction: ltr; color: var(--cyan);
+    word-break: break-all; margin-bottom: 12px;
+  }
+  .big-toast .toast-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .big-toast .toast-actions button, .big-toast .toast-actions a {
+    padding: 9px 16px; border-radius: 9px;
+    font-size: 12px; font-weight: 700;
+    font-family: inherit; cursor: pointer;
+    text-decoration: none; border: none;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .big-toast .toast-actions .copy-btn {
+    background: rgba(59,130,246,0.15); color: var(--blue-soft);
+    border: 1px solid rgba(59,130,246,0.3);
+  }
+  .big-toast .toast-actions .copy-btn.copied { background: var(--success); color: #fff; }
+  .big-toast .toast-actions .view-btn {
+    background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+    color: #fff;
+  }
+  .big-toast .close-toast {
+    position: absolute; top: 10px; left: 10px;
+    width: 28px; height: 28px; border-radius: 50%;
+    background: rgba(255,255,255,0.05); color: var(--muted);
+    border: none; cursor: pointer; font-size: 16px; padding: 0;
   }
 </style>
 </head>
@@ -237,6 +318,28 @@
 
 <div class="container" id="app">
   <div class="loading">⏳ در حال بارگذاری...</div>
+</div>
+
+<!-- Modal ساخت وبلاگ -->
+<div class="modal-bg" id="createModal">
+  <div class="modal">
+    <h2>➕ وبلاگ جدید</h2>
+    <p class="sub">آدرس وبلاگت رو انتخاب کن (حروف کوچک انگلیسی، عدد، _)</p>
+    <div class="field">
+      <label>آدرس وبلاگ (نام کاربری)</label>
+      <input type="text" id="new-blog-username" placeholder="ali_reza" maxlength="20">
+      <div class="hint">این می‌شه: /u/ali_reza</div>
+    </div>
+    <div class="field">
+      <label>نام نمایشی</label>
+      <input type="text" id="new-blog-name" placeholder="علی رضایی" maxlength="50">
+    </div>
+    <div class="modal-actions">
+      <button class="cancel" onclick="closeCreateModal()">انصراف</button>
+      <button class="ok" onclick="createBlog()">✨ ساخت</button>
+    </div>
+    <div class="msg" id="createMsg"></div>
+  </div>
 </div>
 
 <script>
@@ -291,12 +394,13 @@ const LINK_ICONS = {
   mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>'
 };
 
-const SVG_SAVE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>';
+const SVG_SAVE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>';
 const SVG_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
-const SVG_EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-const SVG_LOGOUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>';
-const SVG_USER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
-const SVG_LINK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+const SVG_EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+const SVG_LOGOUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>';
+const SVG_USER = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+const SVG_LINK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+const SVG_PLUS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
 
 function escapeHtml(s) {
   return String(s || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -309,14 +413,14 @@ function getInitials(name) {
   return name.slice(0, 2).toUpperCase();
 }
 
+function getToken() { return localStorage.getItem('bioToken') || ''; }
+
 let me = null;
+let blogs = [];
+let currentBlogId = null;
 let selectedAvatar = 'gradient1';
 let selectedIcon = 'link';
 let previewTimer = null;
-
-function getToken() {
-  return localStorage.getItem('bioToken') || '';
-}
 
 function showMsg(id, text, isError) {
   const m = document.getElementById(id);
@@ -329,81 +433,111 @@ function showMsg(id, text, isError) {
 async function loadMe() {
   const token = getToken();
   if (!token) { window.location.href = '/login.html'; return; }
-
   try {
     const res = await fetch('/api/me', { headers: { 'x-token': token } });
     if (!res.ok) { localStorage.clear(); window.location.href = '/login.html'; return; }
     me = await res.json();
-    if (me.banned) {
-      document.getElementById('app').innerHTML = `
-        <div style="text-align:center;padding:60px 20px;">
-          <div style="font-size:72px;margin-bottom:16px;">🚫</div>
-          <h1 style="color:#ef4444;font-size:24px;margin-bottom:12px;">حساب شما مسدود شده است</h1>
-          <p style="color:#7a8ba3;">برای اطلاعات بیشتر با مدیر تماس بگیرید</p>
-        </div>`;
-      return;
+    blogs = me.blogs || [];
+    if (blogs.length > 0) {
+      currentBlogId = blogs[0].id;
+      selectedAvatar = blogs[0].avatarStyle || 'gradient1';
     }
-    selectedAvatar = me.avatarStyle || 'gradient1';
     render();
   } catch (e) {
     document.getElementById('app').innerHTML = '<div class="loading">خطا در بارگذاری</div>';
   }
 }
 
+function getCurrentBlog() {
+  return blogs.find(b => b.id === currentBlogId) || null;
+}
+
 function render() {
   const app = document.getElementById('app');
-  const gradient = GRADIENTS[me.avatarStyle] || GRADIENTS.gradient1;
+  const blog = getCurrentBlog();
 
-  app.innerHTML = `
+  // Topbar
+  let topbarHtml = `
     <div class="topbar">
       <div class="user-info">
-        <div class="user-avatar" style="background:${gradient}">${getInitials(me.name)}</div>
+        <div class="avatar">${getInitials(me.name || me.username)}</div>
         <div class="user-text">
           <b>${escapeHtml(me.name || me.username)}</b>
-          <span>@${escapeHtml(me.username)} • ${me.links.length} لینک</span>
+          <span>@${escapeHtml(me.username)} • ${blogs.length} وبلاگ</span>
         </div>
       </div>
       <div class="actions">
-        <a href="/u/${escapeHtml(me.username)}" class="btn" target="_blank">${SVG_EYE} وبلاگم</a>
         <button class="btn danger" onclick="logout()">${SVG_LOGOUT} خروج</button>
       </div>
     </div>
+  `;
 
+  // Blogs bar
+  let blogsBarHtml = `<div class="blogs-bar">`;
+  blogs.forEach(b => {
+    blogsBarHtml += `
+      <button class="blog-chip ${b.id === currentBlogId ? 'active' : ''}" onclick="selectBlog('${b.id}')">
+        📝 ${escapeHtml(b.username)}
+      </button>
+    `;
+  });
+  if (blogs.length < 5) {
+    blogsBarHtml += `<button class="blog-chip add" onclick="openCreateModal()">${SVG_PLUS} وبلاگ جدید</button>`;
+  }
+  blogsBarHtml += `</div>`;
+
+  // اگه وبلاگی نیست
+  if (!blog) {
+    app.innerHTML = topbarHtml + `
+      <div class="card" style="text-align:center;padding:60px 20px;">
+        <div style="font-size:64px;margin-bottom:16px;">✨</div>
+        <h2 style="justify-content:center;">هنوز وبلاگی نساختی</h2>
+        <p style="color:var(--muted);margin-bottom:20px;">اولین وبلاگت رو بساز (تا ۵ وبلاگ می‌تونی داشته باشی)</p>
+        <button class="btn primary" onclick="openCreateModal()" style="margin:0 auto;">${SVG_PLUS} وبلاگ جدید</button>
+      </div>
+    `;
+    return;
+  }
+
+  const gradient = GRADIENTS[blog.avatarStyle] || GRADIENTS.gradient1;
+
+  app.innerHTML = topbarHtml + blogsBarHtml + `
     <div class="layout">
       <div>
         <div class="card">
-          <h2>${SVG_USER} اطلاعات پروفایل</h2>
+          <h2>${SVG_USER} اطلاعات وبلاگ <span style="color:var(--blue-soft);font-size:12px;margin-right:auto;">/u/${escapeHtml(blog.username)}</span></h2>
           <div class="field">
             <label>نام نمایشی</label>
-            <input type="text" id="f-name" value="${escapeHtml(me.name)}" maxlength="50" oninput="schedulePreview()">
+            <input type="text" id="f-name" value="${escapeHtml(blog.name)}" maxlength="50" oninput="schedulePreview()">
           </div>
           <div class="field">
             <label>عنوان شغلی</label>
-            <input type="text" id="f-title" value="${escapeHtml(me.title || '')}" maxlength="100" oninput="schedulePreview()">
+            <input type="text" id="f-title" value="${escapeHtml(blog.title || '')}" maxlength="100" oninput="schedulePreview()">
           </div>
           <div class="field">
             <label>بیوگرافی کوتاه</label>
-            <input type="text" id="f-bio" value="${escapeHtml(me.bio || '')}" maxlength="300" oninput="schedulePreview()">
+            <input type="text" id="f-bio" value="${escapeHtml(blog.bio || '')}" maxlength="300" oninput="schedulePreview()">
           </div>
           <div class="field">
             <label>درباره من</label>
-            <textarea id="f-about" maxlength="5000" oninput="schedulePreview()">${escapeHtml(me.about || '')}</textarea>
+            <textarea id="f-about" maxlength="5000" oninput="schedulePreview()">${escapeHtml(blog.about || '')}</textarea>
           </div>
           <div class="field">
             <label>رنگ آواتار</label>
             <div class="avatar-options" id="avatarOpts"></div>
           </div>
-          <button class="action" onclick="saveProfile()">${SVG_SAVE} ذخیره تغییرات</button>
-          <div class="msg" id="profileMsg"></div>
+          <button class="action" onclick="saveBlog()">${SVG_SAVE} ذخیره تغییرات</button>
+          <div class="msg" id="saveMsg"></div>
+          <button class="btn danger" onclick="deleteBlog()" style="margin-top:12px;width:100%;justify-content:center;">${SVG_TRASH} حذف این وبلاگ</button>
         </div>
 
         <div class="card">
-          <h2>${SVG_LINK} لینک‌ها (${me.links.length})</h2>
+          <h2>${SVG_LINK} لینک‌ها (${blog.links.length})</h2>
           <div id="linksList"></div>
         </div>
 
         <div class="card">
-          <h2>➕ افزودن لینک جدید</h2>
+          <h2>➕ افزودن لینک</h2>
           <div class="field">
             <label>عنوان</label>
             <input type="text" id="l-title" placeholder="مثلاً: اینستاگرام من" maxlength="60">
@@ -420,7 +554,7 @@ function render() {
             <label>آیکون</label>
             <div class="icon-picker" id="iconPicker"></div>
           </div>
-          <button class="action" onclick="addLink()">➕ افزودن لینک</button>
+          <button class="action" onclick="addLink()">➕ افزودن</button>
           <div class="msg" id="linkMsg"></div>
         </div>
       </div>
@@ -428,11 +562,11 @@ function render() {
       <div>
         <div class="preview-panel">
           <div class="preview-head">
-            <h3>👁 پیش‌نمایش زنده</h3>
-            <a href="/u/${escapeHtml(me.username)}" target="_blank">باز کردن ↗</a>
+            <h3>👁 پیش‌نمایش</h3>
+            <a href="/u/${escapeHtml(blog.username)}" target="_blank">باز کردن ↗</a>
           </div>
           <div class="preview-frame">
-            <iframe id="previewFrame" src="/u/${escapeHtml(me.username)}" style="width:100%;height:100%;border:none;"></iframe>
+            <iframe id="previewFrame" src="/u/${escapeHtml(blog.username)}"></iframe>
           </div>
         </div>
       </div>
@@ -442,6 +576,13 @@ function render() {
   renderAvatars();
   renderIconPicker();
   renderLinks();
+}
+
+function selectBlog(id) {
+  currentBlogId = id;
+  const blog = getCurrentBlog();
+  if (blog) selectedAvatar = blog.avatarStyle || 'gradient1';
+  render();
 }
 
 function renderAvatars() {
@@ -476,11 +617,12 @@ function selectIcon(key) {
 function renderLinks() {
   const c = document.getElementById('linksList');
   if (!c) return;
-  if (!me.links.length) {
+  const blog = getCurrentBlog();
+  if (!blog || !blog.links.length) {
     c.innerHTML = '<div class="empty">هنوز لینکی اضافه نکردی</div>';
     return;
   }
-  c.innerHTML = me.links.map(l => {
+  c.innerHTML = blog.links.map(l => {
     const iconSvg = LINK_ICONS[l.icon] || LINK_ICONS.link;
     return `
       <div class="link-item">
@@ -489,24 +631,24 @@ function renderLinks() {
           <div class="l-title">${escapeHtml(l.title)}</div>
           <div class="l-url">${escapeHtml(l.url)}</div>
         </div>
-        <button class="del-btn" onclick="deleteLink('${l.id}')" title="حذف">${SVG_TRASH}</button>
+        <button class="del-btn" onclick="deleteLink('${l.id}')">${SVG_TRASH}</button>
       </div>
     `;
   }).join('');
 }
 
-// پیش‌نمایش زنده — هر ۲ ثانیه
+// پیش‌نمایش
 function schedulePreview() {
   clearTimeout(previewTimer);
   previewTimer = setTimeout(async () => {
+    const blog = getCurrentBlog();
+    if (!blog) return;
     const name = document.getElementById('f-name').value.trim();
     const title = document.getElementById('f-title').value.trim();
     const bio = document.getElementById('f-bio').value.trim();
     const about = document.getElementById('f-about').value.trim();
-
-    // ذخیره موقت
     try {
-      await fetch('/api/me', {
+      await fetch('/api/blogs/' + blog.id + '/update', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-token': getToken() },
         body: JSON.stringify({ name, title, bio, about, avatarStyle: selectedAvatar })
@@ -521,28 +663,32 @@ function refreshPreview() {
   if (iframe) iframe.src = iframe.src;
 }
 
-async function saveProfile() {
+async function saveBlog() {
+  const blog = getCurrentBlog();
+  if (!blog) return;
   const name = document.getElementById('f-name').value.trim();
   const title = document.getElementById('f-title').value.trim();
   const bio = document.getElementById('f-bio').value.trim();
   const about = document.getElementById('f-about').value.trim();
   try {
-    const res = await fetch('/api/me', {
+    const res = await fetch('/api/blogs/' + blog.id + '/update', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-token': getToken() },
       body: JSON.stringify({ name, title, bio, about, avatarStyle: selectedAvatar })
     });
     if (res.ok) {
-      me.name = name; me.title = title; me.bio = bio; me.about = about; me.avatarStyle = selectedAvatar;
-      showMsg('profileMsg', '✅ ذخیره شد', false);
+      blog.name = name; blog.title = title; blog.bio = bio; blog.about = about; blog.avatarStyle = selectedAvatar;
+      showBigToast('ذخیره شد!', 'تغییرات وبلاگت ذخیره شد', '/u/' + blog.username);
       refreshPreview();
     } else {
-      showMsg('profileMsg', 'خطا', true);
+      showMsg('saveMsg', 'خطا در ذخیره', true);
     }
-  } catch (e) { showMsg('profileMsg', 'خطا در ارتباط', true); }
+  } catch (e) { showMsg('saveMsg', 'خطا در ارتباط', true); }
 }
 
 async function addLink() {
+  const blog = getCurrentBlog();
+  if (!blog) return;
   const title = document.getElementById('l-title').value.trim();
   const url = document.getElementById('l-url').value.trim();
   const description = document.getElementById('l-desc').value.trim();
@@ -551,7 +697,7 @@ async function addLink() {
   if (!/^https?:\/\//i.test(url)) return showMsg('linkMsg', 'آدرس باید با http:// یا https:// شروع بشه', true);
 
   try {
-    const res = await fetch('/api/me/links', {
+    const res = await fetch('/api/blogs/' + blog.id + '/links', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-token': getToken() },
       body: JSON.stringify({ title, url, description, icon: selectedIcon })
@@ -561,37 +707,126 @@ async function addLink() {
     document.getElementById('l-title').value = '';
     document.getElementById('l-url').value = '';
     document.getElementById('l-desc').value = '';
-    showMsg('linkMsg', '✅ اضافه شد', false);
+    showBigToast('لینک اضافه شد!', 'لینکت با موفقیت اضافه شد', '/u/' + blog.username);
     await reloadMe();
     refreshPreview();
   } catch (e) { showMsg('linkMsg', 'خطا', true); }
 }
 
 async function deleteLink(id) {
+  const blog = getCurrentBlog();
+  if (!blog) return;
   if (!confirm('حذف بشه؟')) return;
-  const res = await fetch('/api/me/links/' + id, {
+  const res = await fetch('/api/blogs/' + blog.id + '/links/' + id, {
     method: 'DELETE',
     headers: { 'x-token': getToken() }
   });
   if (res.ok) { await reloadMe(); refreshPreview(); }
 }
 
+async function deleteBlog() {
+  const blog = getCurrentBlog();
+  if (!blog) return;
+  if (!confirm('وبلاگ @' + blog.username + ' برای همیشه حذف بشه؟')) return;
+  const res = await fetch('/api/blogs/' + blog.id, {
+    method: 'DELETE',
+    headers: { 'x-token': getToken() }
+  });
+  if (res.ok) { await reloadMe(); }
+}
+
 async function reloadMe() {
   const res = await fetch('/api/me', { headers: { 'x-token': getToken() } });
   if (res.ok) {
     me = await res.json();
-    renderLinks();
-    // آپدیت شمارنده لینک
-    const txt = document.querySelector('.user-text span');
-    if (txt) txt.textContent = `@${me.username} • ${me.links.length} لینک`;
+    blogs = me.blogs || [];
+    if (!blogs.find(b => b.id === currentBlogId) && blogs.length > 0) {
+      currentBlogId = blogs[0].id;
+      selectedAvatar = blogs[0].avatarStyle || 'gradient1';
+    }
+    render();
   }
 }
 
+// Modal
+function openCreateModal() {
+  if (blogs.length >= 5) return alert('حداکثر ۵ وبلاگ می‌تونی بسازی');
+  document.getElementById('createModal').classList.add('show');
+  document.getElementById('new-blog-username').value = '';
+  document.getElementById('new-blog-name').value = '';
+}
+
+function closeCreateModal() {
+  document.getElementById('createModal').classList.remove('show');
+}
+
+async function createBlog() {
+  const username = document.getElementById('new-blog-username').value.trim().toLowerCase();
+  const name = document.getElementById('new-blog-name').value.trim();
+  if (!username) return showMsg('createMsg', 'آدرس وبلاگ رو وارد کن', true);
+  if (!/^[a-z0-9_]{3,20}$/.test(username)) return showMsg('createMsg', 'آدرس معتبر نیست', true);
+
+  try {
+    const res = await fetch('/api/blogs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-token': getToken() },
+      body: JSON.stringify({ username, name })
+    });
+    const data = await res.json();
+    if (!res.ok) return showMsg('createMsg', '❌ ' + (data.error || 'خطا'), true);
+    closeCreateModal();
+    await reloadMe();
+    currentBlogId = data.blog.id;
+    selectedAvatar = data.blog.avatarStyle || 'gradient1';
+    render();
+    showBigToast('وبلاگ ساخته شد!', 'آدرس وبلاگت آماده‌ست', '/u/' + username);
+  } catch (e) { showMsg('createMsg', 'خطا', true); }
+}
+
 function logout() {
-  if (!confirm('از حساب خارج می‌شی؟')) return;
+  if (!confirm('خارج می‌شی؟')) return;
   fetch('/api/logout', { method: 'POST', headers: { 'x-token': getToken() } });
   localStorage.clear();
   window.location.href = '/';
+}
+
+// Toast بزرگ
+function showBigToast(title, subtitle, blogPath) {
+  const old = document.getElementById('bigToast');
+  if (old) old.remove();
+  const blogUrl = window.location.origin + blogPath;
+  const toast = document.createElement('div');
+  toast.id = 'bigToast';
+  toast.className = 'big-toast';
+  toast.style.position = 'fixed';
+  toast.innerHTML = `
+    <button class="close-toast" onclick="document.getElementById('bigToast').remove()">✕</button>
+    <div class="check-icon">✓</div>
+    <h3>${title}</h3>
+    <p>${subtitle}</p>
+    <div class="link-preview" id="blogUrlText">${blogUrl}</div>
+    <div class="toast-actions">
+      <button class="copy-btn" onclick="copyBlogUrl(this)">📋 کپی لینک</button>
+      <a href="${blogUrl}" target="_blank" class="view-btn">👁 مشاهده</a>
+    </div>
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add('show'), 50);
+  setTimeout(() => {
+    if (document.getElementById('bigToast')) {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 500);
+    }
+  }, 8000);
+}
+
+function copyBlogUrl(btn) {
+  const url = document.getElementById('blogUrlText').textContent;
+  navigator.clipboard.writeText(url).then(() => {
+    btn.textContent = '✅ کپی شد';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 کپی لینک'; btn.classList.remove('copied'); }, 2000);
+  });
 }
 
 loadMe();
