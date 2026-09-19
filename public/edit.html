@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✏️ ویرایش وبلاگ — بیوکده</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #05070d; --card: #0d1420; --border: #1a2942;
+    --text: #e8eef7; --muted: #7a8ba3;
+    --blue: #3b82f6; --blue-soft: #60a5fa; --cyan: #06b6d4;
+    --danger: #ef4444; --success: #22c55e;
+  }
+  body {
+    font-family: -apple-system, 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100vh; padding: 30px 16px 80px;
+    line-height: 1.6; overflow-x: hidden;
+  }
+  #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .container { max-width: 620px; margin: 0 auto; position: relative; z-index: 1; }
+
+  .top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; gap: 10px; flex-wrap: wrap;
+  }
+  .back-btn, .view-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    color: var(--muted); text-decoration: none;
+    font-size: 13px; transition: all 0.25s;
+    padding: 8px 14px; border-radius: 9px;
+    border: 1px solid var(--border);
+    background: rgba(13,20,32,0.6);
+  }
+  .back-btn:hover { color: var(--blue-soft); border-color: var(--blue); }
+  .view-btn { color: var(--blue-soft); }
+  .view-btn:hover { background: var(--blue); color: #fff; border-color: var(--blue); }
+
+  .card {
+    background: rgba(13,20,32,0.9);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 32px 26px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    animation: slideUp 0.5s ease;
+    position: relative; overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(180deg, var(--blue), transparent);
+    opacity: 0.7;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card h2 {
+    font-size: 18px; font-weight: 800; letter-spacing: 1px;
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 10px;
+    color: var(--blue-soft);
+  }
+  .card h2 svg {
+    width: 20px; height: 20px;
+  }
+
+  .field { margin-bottom: 16px; }
+  label {
+    display: block; margin-bottom: 6px;
+    font-size: 11px; color: var(--blue-soft);
+    letter-spacing: 1px; text-transform: uppercase; font-weight: 700;
+  }
+  input, textarea, select {
+    width: 100%; padding: 12px 15px; border-radius: 10px;
+    border: 1px solid var(--border); background: rgba(5,7,13,0.8);
+    color: var(--text); font-size: 14px; font-family: inherit;
+    transition: all 0.25s;
+  }
+  input:focus, textarea:focus, select:focus {
+    outline: none; border-color: var(--blue);
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+  }
+  textarea { min-height: 100px; resize: vertical; line-height: 1.7; }
+  .hint { font-size: 10px; color: var(--muted); margin-top: 4px; }
+
+  /* آواتار */
+  .avatar-options {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .avatar-opt {
+    width: 52px; height: 52px; border-radius: 50%;
+    cursor: pointer; border: 3px solid transparent;
+    transition: all 0.25s;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 900; font-size: 18px;
+  }
+  .avatar-opt:hover { transform: scale(1.1); }
+  .avatar-opt.selected {
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px rgba(6,182,212,0.6);
+    transform: scale(1.1);
+  }
+
+  button.action {
+    width: 100%; padding: 13px; border-radius: 11px;
+    border: none; cursor: pointer;
+    background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+    color: #fff; font-size: 14px; font-weight: 800;
+    font-family: inherit; margin-top: 8px;
+    transition: all 0.25s;
+    box-shadow: 0 8px 25px rgba(59,130,246,0.4);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  button.action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(59,130,246,0.6);
+  }
+  button.action:disabled { opacity: 0.5; cursor: wait; transform: none; }
+
+  .msg {
+    margin-top: 14px; padding: 12px; border-radius: 10px;
+    font-size: 13px; display: none; text-align: center; font-weight: 600;
+  }
+  .msg.success {
+    background: rgba(34,197,94,0.1); color: var(--success);
+    border: 1px solid rgba(34,197,94,0.3); display: block;
+  }
+  .msg.error {
+    background: rgba(239,68,68,0.1); color: #f87171;
+    border: 1px solid rgba(239,68,68,0.3); display: block;
+  }
+
+  /* لیست لینک‌ها */
+  .link-item {
+    background: rgba(5,7,13,0.5);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 12px;
+    transition: all 0.25s;
+  }
+  .link-item:hover {
+    border-color: rgba(59,130,246,0.4);
+    background: rgba(59,130,246,0.03);
+  }
+  .link-item .icon-box {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: rgba(59,130,246,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--blue-soft); flex-shrink: 0;
+  }
+  .link-item .icon-box svg { width: 20px; height: 20px; }
+  .link-item .info { flex: 1; min-width: 0; }
+  .link-item .l-title {
+    font-size: 13px; font-weight: 700; margin-bottom: 3px;
+    word-break: break-word;
+  }
+  .link-item .l-url {
+    font-size: 11px; color: var(--muted);
+    direction: ltr; text-align: left;
+    font-family: 'Consolas', monospace;
+    word-break: break-all;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .link-item .del-btn {
+    width: 36px; height: 36px; border-radius: 9px;
+    border: 1px solid rgba(239,68,68,0.3);
+    background: rgba(239,68,68,0.1); color: var(--danger);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s; flex-shrink: 0; padding: 0;
+  }
+  .link-item .del-btn:hover {
+    background: var(--danger); color: #fff;
+  }
+  .link-item .del-btn svg { width: 16px; height: 16px; }
+
+  .empty {
+    text-align: center; padding: 24px;
+    color: var(--muted); font-size: 13px;
+  }
+
+  /* انتخاب آیکون */
+  .icon-picker {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px;
+  }
+  .icon-opt {
+    width: 42px; height: 42px; border-radius: 10px;
+    border: 2px solid var(--border);
+    background: rgba(5,7,13,0.6);
+    color: var(--muted);
+    cursor: pointer; transition: all 0.25s;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0;
+  }
+  .icon-opt svg { width: 20px; height: 20px; }
+  .icon-opt:hover {
+    border-color: var(--blue);
+    color: var(--blue-soft);
+  }
+  .icon-opt.selected {
+    border-color: var(--cyan);
+    background: rgba(6,182,212,0.15);
+    color: var(--cyan);
+    box-shadow: 0 0 15px rgba(6,182,212,0.3);
+  }
+
+  .loading {
+    text-align: center; padding: 60px 20px;
+    color: var(--muted); font-size: 14px;
+  }
+
+  .error-page {
+    text-align: center; padding: 80px 20px;
+  }
+  .error-page .icon {
+    font-size: 72px; margin-bottom: 16px; display: block;
+    filter: drop-shadow(0 0 30px rgba(239,68,68,0.5));
+  }
+  .error-page h1 {
+    color: var(--danger); font-size: 24px; margin-bottom: 12px;
+  }
+  .error-page p {
+    color: var(--muted); font-size: 14px; margin-bottom: 24px;
+  }
+  .error-page a {
+    display: inline-block; padding: 12px 24px;
+    background: linear-gradient(135deg, var(--blue), var(--blue-soft));
+    color: #fff; text-decoration: none;
+    border-radius: 10px; font-weight: 700; font-size: 13px;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="container" id="app">
+  <div class="loading">⏳ در حال بارگذاری...</div>
+</div>
+
+<script>
+// ============ ذرات ============
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [], w, h;
+  function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for (let i = 0; i < 30; i++) {
+    particles.push({ x: Math.random()*w, y: Math.random()*h, r: Math.random()*1.6+0.4, vx: (Math.random()-0.5)*0.3, vy: (Math.random()-0.5)*0.3, alpha: Math.random()*0.5+0.2, pulse: Math.random()*Math.PI*2 });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.pulse += 0.02;
+      if (p.x < 0 || p.x > w) p.vx *= -1;
+      if (p.y < 0 || p.y > h) p.vy *= -1;
+      const glow = Math.sin(p.pulse) * 0.3 + 0.7;
+      const alpha = p.alpha * glow;
+      const gradient = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
+      gradient.addColorStop(0, `rgba(59, 130, 246, ${alpha})`);
+      gradient.addColorStop(1, 'rgba(59, 130, 246, 0)');
+      ctx.fillStyle = gradient;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = `rgba(96, 165, 250, ${alpha})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ============ داده‌ها ============
+const GRADIENTS = {
+  gradient1: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
+  gradient2: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+  gradient3: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+  gradient4: 'linear-gradient(135deg, #10b981, #06b6d4)',
+  gradient5: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
+  gradient6: 'linear-gradient(135deg, #ef4444, #f97316)'
+};
+
+const LINK_ICONS = {
+  instagram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>',
+  telegram: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>',
+  twitter: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>',
+  youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>',
+  github: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>',
+  website: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+  link: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+  mail: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>'
+};
+
+const SVG_EDIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>';
+const SVG_LINK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+const SVG_TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+const SVG_SAVE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>';
+const SVG_EYE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+
+function escapeHtml(s) {
+  return String(s || '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  })[c]);
+}
+
+function getParams() {
+  const p = new URLSearchParams(window.location.search);
+  return { username: p.get('u'), key: p.get('key') };
+}
+
+function showMsg(id, text, isError) {
+  const m = document.getElementById(id);
+  if (!m) return;
+  m.textContent = text;
+  m.className = 'msg ' + (isError ? 'error' : 'success');
+  setTimeout(() => { m.className = 'msg'; }, 4000);
+}
+
+let currentBlog = null;
+let currentKey = null;
+let currentUsername = null;
+let selectedAvatar = 'gradient1';
+let selectedIcon = 'link';
+
+// ============ بارگذاری ============
+async function loadBlog() {
+  const { username, key } = getParams();
+  const app = document.getElementById('app');
+
+  if (!username || !key) {
+    app.innerHTML = `
+      <div class="error-page">
+        <span class="icon">🔐</span>
+        <h1>دسترسی غیرمجاز</h1>
+        <p>برای ویرایش، باید از لینک اختصاصی با کلید ویرایش وارد بشی</p>
+        <a href="/">بازگشت به خانه</a>
+      </div>`;
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/blog/${encodeURIComponent(username)}?key=${encodeURIComponent(key)}`);
+    const blog = await res.json();
+
+    if (!res.ok) {
+      app.innerHTML = `
+        <div class="error-page">
+          <span class="icon">❌</span>
+          <h1>خطا</h1>
+          <p>${escapeHtml(blog.error || 'وبلاگ پیدا نشد یا کلید اشتباهه')}</p>
+          <a href="/">بازگشت به خانه</a>
+        </div>`;
+      return;
+    }
+
+    currentBlog = blog;
+    currentKey = key;
+    currentUsername = username;
+    selectedAvatar = blog.avatarStyle || 'gradient1';
+
+    render();
+  } catch (e) {
+    app.innerHTML = `
+      <div class="error-page">
+        <span class="icon">❌</span>
+        <h1>خطا</h1>
+        <p>مشکل در بارگذاری</p>
+        <a href="/">بازگشت به خانه</a>
+      </div>`;
+  }
+}
+
+function render() {
+  const app = document.getElementById('app');
+  const b = currentBlog;
+
+  app.innerHTML = `
+    <div class="top-bar">
+      <a href="/u/${escapeHtml(currentUsername)}" class="back-btn">← مشاهده وبلاگ</a>
+      <a href="/u/${escapeHtml(currentUsername)}" class="view-btn">${SVG_EYE} نمایش عمومی</a>
+    </div>
+
+    <!-- کارت پروفایل -->
+    <div class="card">
+      <h2>${SVG_EDIT} اطلاعات پروفایل</h2>
+
+      <div class="field">
+        <label>نام نمایشی</label>
+        <input type="text" id="f-name" value="${escapeHtml(b.name)}" maxlength="50">
+      </div>
+
+      <div class="field">
+        <label>عنوان شغلی</label>
+        <input type="text" id="f-title" value="${escapeHtml(b.title || '')}" maxlength="100">
+      </div>
+
+      <div class="field">
+        <label>بیوگرافی کوتاه</label>
+        <input type="text" id="f-bio" value="${escapeHtml(b.bio || '')}" maxlength="300">
+      </div>
+
+      <div class="field">
+        <label>درباره من</label>
+        <textarea id="f-about" maxlength="5000">${escapeHtml(b.about || '')}</textarea>
+      </div>
+
+      <div class="field">
+        <label>رنگ آواتار</label>
+        <div class="avatar-options" id="avatarOpts"></div>
+      </div>
+
+      <button class="action" onclick="saveProfile()">${SVG_SAVE} ذخیره تغییرات</button>
+      <div class="msg" id="profileMsg"></div>
+    </div>
+
+    <!-- کارت لینک‌ها -->
+    <div class="card">
+      <h2>${SVG_LINK} لینک‌ها</h2>
+      <div id="linksList"></div>
+    </div>
+
+    <!-- کارت افزودن لینک -->
+    <div class="card">
+      <h2>➕ افزودن لینک جدید</h2>
+
+      <div class="field">
+        <label>عنوان</label>
+        <input type="text" id="l-title" placeholder="مثلاً: اینستاگرام من" maxlength="60">
+      </div>
+
+      <div class="field">
+        <label>آدرس (URL)</label>
+        <input type="text" id="l-url" placeholder="https://instagram.com/username" style="direction:ltr;text-align:left;">
+      </div>
+
+      <div class="field">
+        <label>توضیح (اختیاری)</label>
+        <input type="text" id="l-desc" placeholder="یه توضیح کوتاه" maxlength="100">
+      </div>
+
+      <div class="field">
+        <label>آیکون</label>
+        <div class="icon-picker" id="iconPicker"></div>
+      </div>
+
+      <button class="action" onclick="addLink()">➕ افزودن لینک</button>
+      <div class="msg" id="linkMsg"></div>
+    </div>
+  `;
+
+  renderAvatars();
+  renderIconPicker();
+  renderLinks();
+}
+
+function renderAvatars() {
+  const c = document.getElementById('avatarOpts');
+  if (!c) return;
+  c.innerHTML = Object.entries(GRADIENTS).map(([key, val]) => `
+    <div class="avatar-opt ${key === selectedAvatar ? 'selected' : ''}"
+         style="background: ${val}"
+         onclick="selectAvatar('${key}')">${key === selectedAvatar ? '✓' : ''}</div>
+  `).join('');
+}
+
+function selectAvatar(key) {
+  selectedAvatar = key;
+  renderAvatars();
+}
+
+function renderIconPicker() {
+  const c = document.getElementById('iconPicker');
+  if (!c) return;
+  c.innerHTML = Object.entries(LINK_ICONS).map(([key, svg]) => `
+    <button class="icon-opt ${key === selectedIcon ? 'selected' : ''}"
+            onclick="selectIcon('${key}')" title="${key}">${svg}</button>
+  `).join('');
+}
+
+function selectIcon(key) {
+  selectedIcon = key;
+  renderIconPicker();
+}
+
+function renderLinks() {
+  const c = document.getElementById('linksList');
+  if (!c) return;
+  const links = currentBlog.links || [];
+
+  if (!links.length) {
+    c.innerHTML = '<div class="empty">هنوز لینکی اضافه نکردی</div>';
+    return;
+  }
+
+  c.innerHTML = links.map(l => {
+    const iconSvg = LINK_ICONS[l.icon] || LINK_ICONS.link;
+    return `
+      <div class="link-item">
+        <div class="icon-box">${iconSvg}</div>
+        <div class="info">
+          <div class="l-title">${escapeHtml(l.title)}</div>
+          <div class="l-url">${escapeHtml(l.url)}</div>
+        </div>
+        <button class="del-btn" onclick="deleteLink('${escapeHtml(l.id)}')" title="حذف">
+          ${SVG_TRASH}
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+// ============ ذخیره ============
+async function saveProfile() {
+  const name = document.getElementById('f-name').value.trim();
+  const title = document.getElementById('f-title').value.trim();
+  const bio = document.getElementById('f-bio').value.trim();
+  const about = document.getElementById('f-about').value.trim();
+
+  try {
+    const res = await fetch(`/api/blog/${encodeURIComponent(currentUsername)}/update`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: currentKey, name, title, bio, about, avatarStyle: selectedAvatar })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showMsg('profileMsg', '✅ ذخیره شد', false);
+      currentBlog.name = name;
+      currentBlog.title = title;
+      currentBlog.bio = bio;
+      currentBlog.about = about;
+      currentBlog.avatarStyle = selectedAvatar;
+    } else {
+      showMsg('profileMsg', '❌ ' + (data.error || 'خطا'), true);
+    }
+  } catch (e) {
+    showMsg('profileMsg', '❌ خطا در ارتباط', true);
+  }
+}
+
+async function addLink() {
+  const title = document.getElementById('l-title').value.trim();
+  const url = document.getElementById('l-url').value.trim();
+  const description = document.getElementById('l-desc').value.trim();
+
+  if (!title) return showMsg('linkMsg', 'عنوان رو وارد کن', true);
+  if (!url) return showMsg('linkMsg', 'آدرس رو وارد کن', true);
+  if (!/^https?:\/\//i.test(url)) {
+    return showMsg('linkMsg', 'آدرس باید با http:// یا https:// شروع بشه', true);
+  }
+
+  try {
+    const res = await fetch(`/api/blog/${encodeURIComponent(currentUsername)}/links`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: currentKey, title, url, description, icon: selectedIcon })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      showMsg('linkMsg', '✅ اضافه شد', false);
+      document.getElementById('l-title').value = '';
+      document.getElementById('l-url').value = '';
+      document.getElementById('l-desc').value = '';
+      // رفرش لیست
+      await reloadBlog();
+    } else {
+      showMsg('linkMsg', '❌ ' + (data.error || 'خطا'), true);
+    }
+  } catch (e) {
+    showMsg('linkMsg', '❌ خطا در ارتباط', true);
+  }
+}
+
+async function deleteLink(linkId) {
+  if (!confirm('این لینک حذف بشه؟')) return;
+
+  try {
+    const res = await fetch(
+      `/api/blog/${encodeURIComponent(currentUsername)}/links/${encodeURIComponent(linkId)}?key=${encodeURIComponent(currentKey)}`,
+      { method: 'DELETE' }
+    );
+    if (res.ok) {
+      await reloadBlog();
+    } else {
+      alert('خطا در حذف');
+    }
+  } catch (e) {
+    alert('خطا در ارتباط');
+  }
+}
+
+async function reloadBlog() {
+  try {
+    const res = await fetch(`/api/blog/${encodeURIComponent(currentUsername)}?key=${encodeURIComponent(currentKey)}`);
+    if (res.ok) {
+      currentBlog = await res.json();
+      renderLinks();
+    }
+  } catch (e) {}
+}
+
+// ============ شروع ============
+loadBlog();
+</script>
+</body>
+</html>
